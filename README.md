@@ -1,4 +1,4 @@
-# weato_backend-SpringBoot-
+# weato_backend   -SpringBoot-
 
 
 ### 1. 개발 계획
