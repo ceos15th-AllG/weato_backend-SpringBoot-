@@ -1,4 +1,4 @@
-//package allG.weato.config.auth;
+package allG.weato.config.auth;//package allG.weato.config.auth;
 //
 //import allG.weato.config.auth.dto.OAuthAttributes;
 //import allG.weato.config.auth.dto.SessionMember;

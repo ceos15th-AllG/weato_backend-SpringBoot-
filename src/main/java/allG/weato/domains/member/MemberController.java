@@ -1,9 +1,9 @@
 package allG.weato.domains.member;
 
 
-import allG.weato.config.oauth.model.ApiResponse;
 import allG.weato.domains.member.MemberService;
 import allG.weato.domains.member.entities.Member;
+import allG.weato.oauth2.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -12,22 +12,21 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:8000", exposedHeaders = "token")
 @RequestMapping("/api")
 public class MemberController {
 
     private final MemberService memberService;
 
-
-    @GetMapping("/member")
-    public ApiResponse getUser() {
+    @GetMapping
+    public void getUser() {
         org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("principal = " + principal);
-        Member member = memberService.getMember(principal.getUsername());
 
-        return ApiResponse.success("member", member);
+        System.out.println("user name = "+principal.getUsername());
+//        Member member = memberService.getUser(principal.getUsername());
+//
+//        return ApiResponse.success("user", member);
     }
-
-
 
     @GetMapping("/members/{memberId}")// my-page
     public void showMember(@PathVariable("memberId") Long memberId){

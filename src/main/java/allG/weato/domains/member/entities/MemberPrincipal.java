@@ -40,7 +40,7 @@ public class MemberPrincipal implements OAuth2User, UserDetails, OidcUser {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<? extends GrantedAuthority>       getAuthorities() {
         return authorities;
     }
 
