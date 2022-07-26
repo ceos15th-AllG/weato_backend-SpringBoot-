@@ -12,7 +12,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:8000", exposedHeaders = "token")
 @RequestMapping("/api")
 public class MemberController {
 
@@ -21,6 +20,7 @@ public class MemberController {
     @GetMapping
     public void getUser() {
         org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 
         System.out.println("user name = "+principal.getUsername());
 //        Member member = memberService.getUser(principal.getUsername());

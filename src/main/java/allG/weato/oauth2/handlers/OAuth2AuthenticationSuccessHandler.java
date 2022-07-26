@@ -53,6 +53,8 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
 //        }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
         String token = jwtTokenUtil.generateToken(authentication.getName());
+        System.out.println("authentication = " + authentication.getName());
+        System.out.println("authentication = " + authentication.getPrincipal().toString());
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)
                 .build().toUriString();
