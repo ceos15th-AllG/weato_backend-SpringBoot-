@@ -36,7 +36,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 
         final String requestTokenHeader = request.getHeader("Authorization");
-
         String username = null;
         String jwtToken = null;
 
@@ -57,7 +56,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             System.out.println("requestTokenHeader = " + requestTokenHeader);
             logger.warn("JWT Token does not begin with Bearer String");
         }
-
+        if(username==null) System.out.println("omg the username is null..what we have to do?");
+        if(SecurityContextHolder.getContext().getAuthentication() != null) System.out.println("not null!!");
         // Once we get the token validate it.
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 

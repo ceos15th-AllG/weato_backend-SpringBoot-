@@ -13,10 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 public class CreatePostRequest {
     @NotEmpty
-    String content;
+    String title;
 
     @NotEmpty
-    String title;
+    String content;
+
     LocalDateTime createAt;
 
     BoardType boardType;

@@ -2,10 +2,15 @@ package allG.weato.domains.member;
 
 
 import allG.weato.domains.member.MemberService;
+import allG.weato.domains.member.dto.MemberResponseDto;
 import allG.weato.domains.member.entities.Member;
+import allG.weato.oauth2.JwtMemberDetails;
 import allG.weato.oauth2.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,16 +22,16 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping
-    public void getUser() {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    @GetMapping("/v1/users")
+    public MemberResponseDto getUser() {
 
+        JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email =  principal.getUsername();
+        Member member = memberService.findByEmail(email);
 
-        System.out.println("user name = "+principal.getUsername());
-//        Member member = memberService.getUser(principal.getUsername());
-//
-//        return ApiResponse.success("user", member);
+        return new MemberResponseDto(member);
     }
+
 
     @GetMapping("/members/{memberId}")// my-page
     public void showMember(@PathVariable("memberId") Long memberId){

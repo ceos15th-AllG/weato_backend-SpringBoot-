@@ -16,6 +16,7 @@ import allG.weato.dto.error.Error500;
 import allG.weato.domains.post.postDto.update.UpdatePostRequest;
 import allG.weato.domains.post.postDto.update.UpdatePostResponse;
 import allG.weato.domains.member.MemberService;
+import allG.weato.oauth2.JwtMemberDetails;
 import allG.weato.validation.CommonErrorCode;
 import allG.weato.validation.RestException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,6 +29,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -61,7 +63,7 @@ public class PostController {
         if(findPosts.isEmpty()) throw new RestException(CommonErrorCode.RESOURCE_NOT_FOUND);
         List<Post> posts = findPosts.getContent();
         int lastPageNum = findPosts.getTotalPages();
-        int current = findPosts.getNumber();
+        int current = page;
         int min = 1+current/10*10;
         int max =10+current/10*10;
         if(max>=lastPageNum) max = lastPageNum;
@@ -83,12 +85,14 @@ public class PostController {
             @ApiResponse(responseCode = "500",description = "INTERNAL SERVER ERROR", content = @Content(schema = @Schema(implementation = Error500.class )))
     })
     @PostMapping("/posts")
-    public CreatePostResponse createPost(@RequestBody @Valid CreatePostRequest request){
-        SessionMember member = (SessionMember) httpSession.getAttribute("member");
-        Member findMember = memberService.findByEmail(member.getEmail());
+    public CreatePostResponse createPost(@RequestBody @Valid CreatePostRequest request) {
+        JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = principal.getUsername();
+        Member findMember = memberService.findByEmail(email);
         Post post = new Post(request.getTitle(),request.getContent(),request.getBoardType(),LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         post.setOwner(findMember);
         for (String  s : request.getImageUrls()) {
+
             Attachment attachment = new Attachment(s);
             post.addAttachments(attachment);
         }
@@ -150,8 +154,9 @@ public class PostController {
     public AddLikeDto likeToPost(@PathVariable("postId") Long id){
 
         Post post = postService.findPostById(id);
-        SessionMember member = (SessionMember) httpSession.getAttribute("member");
-        Member findMember = memberService.findByEmail(member.getEmail());
+        JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = principal.getUsername();
+        Member findMember = memberService.findByEmail(email);
         if(findMember==null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         PostLike postLike = new PostLike();
         List<PostLike> postLikeList = post.getPostLikeList();
@@ -169,8 +174,9 @@ public class PostController {
     public HttpStatus deleteLike(@PathVariable("postId")Long id){
 
         Post findPost = postService.findPostById(id);
-        SessionMember member = (SessionMember) httpSession.getAttribute("member");
-        Member findMember = memberService.findByEmail(member.getEmail());
+        JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = principal.getUsername();
+        Member findMember = memberService.findByEmail(email);
         for (PostLike like : findPost.getPostLikeList()) {
             if(like.getMember().getId()==findMember.getId()){
                 postService.deleteLike(findMember,findPost,like);

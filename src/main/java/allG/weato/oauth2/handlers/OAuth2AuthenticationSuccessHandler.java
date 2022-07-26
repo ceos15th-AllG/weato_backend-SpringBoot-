@@ -1,5 +1,8 @@
 package allG.weato.oauth2.handlers;
 
+import allG.weato.domains.member.MemberRefreshTokenRepository;
+import allG.weato.domains.member.entities.Member;
+import allG.weato.domains.member.entities.MemberRefreshToken;
 import allG.weato.oauth2.exception.BadRequestException;
 import allG.weato.oauth2.properties.AppProperties;
 import allG.weato.oauth2.repository.HttpCookieOAuth2AuthorizationRequestRepository;
@@ -20,6 +23,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 
+import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REFRESH_TOKEN;
+
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
@@ -29,6 +34,7 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
 
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
+    private final MemberRefreshTokenRepository memberRefreshTokenRepository;
 
     //oauth2인증이 성공적으로 이뤄졌을 때 실행된다
     //token을 포함한 uri을 생성 후 인증요청 쿠키를 비워주고 redirect 한다.
@@ -47,13 +53,34 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         Optional<String> redirectUri = CookieUtils.getCookie(request, HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
+//        System.out.println("redirectUri = " + redirectUri.get());
 //        if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
 //            throw new BadRequestException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
 //        }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
         String token = jwtTokenUtil.generateToken(authentication.getName());
         System.out.println("authentication = " + authentication.getName());
-        System.out.println("authentication = " + authentication.getPrincipal().toString());
+        System.out.println("authentication = " + authentication.getPrincipal());
+
+        long refreshExpiry = appProperties.getAuth().getTokenExpirationMsec();
+
+        String refreshToken= jwtTokenUtil.generateToken(authentication.getName());
+        MemberRefreshToken memberRefreshToken = memberRefreshTokenRepository.findByUserId(authentication.getName());
+
+        System.out.println("refreshToken = " + refreshToken);
+
+        if(memberRefreshToken!=null){
+            memberRefreshToken.setRefreshToken(refreshToken);
+        }
+        else{
+            memberRefreshToken=new MemberRefreshToken(authentication.getName(),refreshToken);
+            memberRefreshTokenRepository.saveAndFlush(memberRefreshToken);
+        }
+
+        int cookieMaxAge = (int) refreshExpiry / 60;
+        CookieUtils.deleteCookie(request,response,REFRESH_TOKEN);
+        CookieUtils.addCookie(response,REFRESH_TOKEN,refreshToken,cookieMaxAge);
+
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)
                 .build().toUriString();
