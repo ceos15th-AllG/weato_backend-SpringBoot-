@@ -4,6 +4,7 @@ import allG.weato.domains.enums.ProviderType;
 import allG.weato.domains.enums.Role;
 import allG.weato.domains.member.MemberRepository;
 import allG.weato.domains.member.entities.Member;
+import allG.weato.domains.member.entities.Profile;
 import allG.weato.oauth2.JwtMemberDetails;
 import allG.weato.oauth2.exception.OAuthProviderMissMatchException;
 import allG.weato.oauth2.memberInfo.OAuth2MemberInfo;
@@ -75,7 +76,8 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
         Member member = new Member(
                 memberInfo.getName(), memberInfo.getEmail(), memberInfo.getGender(), memberInfo.getBirthyear(), Role.USER,providerType
         );
-
+        Profile profile = new Profile();
+        member.addProfile(profile);
         return memberRepository.save(member);
     }
 

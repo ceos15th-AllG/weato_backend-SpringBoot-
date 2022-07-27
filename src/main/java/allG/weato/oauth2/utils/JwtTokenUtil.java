@@ -54,6 +54,13 @@ public class JwtTokenUtil implements Serializable {
         return doGenerateToken(claims, username);
     }
 
+
+    //for refreshToken
+    public String generateToken(String username,long expiry) {
+        Map<String, Object> claims = new HashMap<>();
+        return doGenerateToken(claims, username,expiry);
+    }
+
     //while creating the token - (토큰에 정보를 넣고, 시크릿 키를 이용해서 토큰을 compact하게 만든다)
     //1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
     //2. Sign the JWT using the HS512 algorithm and secret key.
@@ -62,6 +69,13 @@ public class JwtTokenUtil implements Serializable {
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                .signWith(SignatureAlgorithm.HS512, secret).compact();
+
+    }
+
+    private String doGenerateToken(Map<String, Object> claims, String subject,long expiry) {
+        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiry))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
 
     }

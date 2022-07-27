@@ -16,7 +16,9 @@ public class AppProperties {
 
         private String tokenSecret;
 
-        private long tokenExpirationMsec;
+        private long tokenExpiry;
+
+        private long refreshTokenExpiry;
 
         public String getTokenSecret() {
             return tokenSecret;
@@ -26,12 +28,19 @@ public class AppProperties {
             this.tokenSecret = tokenSecret;
         }
 
-        public long getTokenExpirationMsec() {
-            return tokenExpirationMsec;
+        public long getTokenExpiry() {
+            return tokenExpiry;
         }
 
-        public void setTokenExpirationMsec(long tokenExpirationMsec) {
-            this.tokenExpirationMsec = tokenExpirationMsec;
+        public void setTokenExpiry(long tokenExpiry) {
+            this.tokenExpiry = tokenExpiry;
+        }
+
+        public long getRefreshTokenExpiry(){
+            return refreshTokenExpiry;
+        }
+        public void setRefreshTokenExpiry(long refreshTokenExpiry){
+            this.refreshTokenExpiry=refreshTokenExpiry;
         }
     }
 

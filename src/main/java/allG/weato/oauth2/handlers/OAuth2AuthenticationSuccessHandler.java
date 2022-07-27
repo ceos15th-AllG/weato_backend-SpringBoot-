@@ -58,16 +58,13 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
 //            throw new BadRequestException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
 //        }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-        String token = jwtTokenUtil.generateToken(authentication.getName());
-        System.out.println("authentication = " + authentication.getName());
-        System.out.println("authentication = " + authentication.getPrincipal());
+        String accessToken = jwtTokenUtil.generateToken(authentication.getName());
 
-        long refreshExpiry = appProperties.getAuth().getTokenExpirationMsec();
+        long refreshExpiry = appProperties.getAuth().getRefreshTokenExpiry();
 
-        String refreshToken= jwtTokenUtil.generateToken(authentication.getName());
+        String refreshToken= jwtTokenUtil.generateToken(authentication.getName(),refreshExpiry);
         MemberRefreshToken memberRefreshToken = memberRefreshTokenRepository.findByUserId(authentication.getName());
 
-        System.out.println("refreshToken = " + refreshToken);
 
         if(memberRefreshToken!=null){
             memberRefreshToken.setRefreshToken(refreshToken);
@@ -79,10 +76,10 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
 
         int cookieMaxAge = (int) refreshExpiry / 60;
         CookieUtils.deleteCookie(request,response,REFRESH_TOKEN);
-        CookieUtils.addCookie(response,REFRESH_TOKEN,refreshToken,cookieMaxAge);
+        CookieUtils.addCookie(response, REFRESH_TOKEN ,refreshToken,cookieMaxAge);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("token", token)
+                .queryParam("token", accessToken)
                 .build().toUriString();
     }
 

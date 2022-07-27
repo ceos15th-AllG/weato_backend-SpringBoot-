@@ -28,6 +28,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
 
 import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REFRESH_TOKEN;
@@ -51,8 +52,8 @@ public class JwtAuthenticationController {
     @GetMapping("/refresh")
     public ApiResponse refreshToken(HttpServletRequest request, HttpServletResponse response){
         JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String accessToken = request.getHeader("Authorization");
-        if(jwtTokenUtil.validateToken(accessToken,principal)){
+        String accessToken = request.getHeader("Authorization").substring(7);
+        if(!jwtTokenUtil.validateToken(accessToken,principal)){
             return ApiResponse.invalidAccessToken();
         }
 
@@ -64,10 +65,11 @@ public class JwtAuthenticationController {
 
         String email = jwtTokenUtil.getClaimFromToken(accessToken,Claims::getSubject);
         Role role = Role.USER;
-
+        Cookie[] cookies = request.getCookies();
         String refreshToken = CookieUtils.getCookie(request,REFRESH_TOKEN)
                 .map(Cookie::getValue)
                 .orElse((null));
+
 
         if(!jwtTokenUtil.validateToken(refreshToken,principal)){
             return ApiResponse.invalidRefreshToken();
@@ -82,7 +84,7 @@ public class JwtAuthenticationController {
         long validTime = jwtTokenUtil.getExpirationDateFromToken(refreshToken).getTime()- now.getTime();
 
         if(validTime<THREE_DAYS_MSEC){
-            long refreshTokenExpiry=appProperties.getAuth().getTokenExpirationMsec();
+            long refreshTokenExpiry=appProperties.getAuth().getTokenExpiry();
 
             refreshToken=jwtTokenUtil.generateToken(email);
 

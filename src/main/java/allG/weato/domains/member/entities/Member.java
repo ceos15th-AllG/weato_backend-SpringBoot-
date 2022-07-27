@@ -4,6 +4,7 @@ import allG.weato.domains.comment.entities.Comment;
 import allG.weato.domains.comment.entities.CommentLike;
 import allG.weato.domains.enums.ProviderType;
 import allG.weato.domains.enums.Role;
+import allG.weato.domains.enums.TagType;
 import allG.weato.domains.post.entities.Post;
 import allG.weato.domains.post.entities.PostLike;
 import allG.weato.domains.post.entities.Scrap;
@@ -12,6 +13,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +25,10 @@ public class Member {
     @Column(name = "member_id")
     private Long Id;
 
+    private String userId;
     private String name;
 
-    private String userId;
+    private String nickname;
 
     private String email;
 
@@ -80,12 +83,16 @@ public class Member {
     @JoinColumn(name = "additional_info_id")
     private AdditionalInfo additionalInfo;
 
-    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
-    private List<Tag> tags = new ArrayList<>();
+//    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
+//    private List<Tag> tags = new ArrayList<>();
+
+    @ElementCollection
+    private List<TagType> tagTypeList = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "scrap_id")
     private Scrap scrap;
+
 
     //NoArgsConstructor
     public Member(){ initMember();}
@@ -100,6 +107,7 @@ public class Member {
         this.gender=gender;
         this.birthyear=birthyear;
         this.providerType=providerType;
+        this.createAt=LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
     public Member update(String name)
     {
@@ -136,7 +144,7 @@ public class Member {
         additional_info_checker=true;
     }
 
-    public void setProfile(Profile profile){
+    public void addProfile(Profile profile){
         this.profile=profile;
     }
 
@@ -156,10 +164,10 @@ public class Member {
         postLike.setOwner(this);
     }
 
-    public void addTag(Tag tag){
-        tags.add(tag);
-        tag.setOwner(this);
-    }
+//    public void addTag(Tag tag){
+//        tags.add(tag);
+//        tag.setOwner(this);
+//    }
 
     public void setBookMark(BookMark bookMark){
         this.bookMark=bookMark;

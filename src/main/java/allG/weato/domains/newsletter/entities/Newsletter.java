@@ -1,7 +1,7 @@
 package allG.weato.domains.newsletter.entities;
 
 import allG.weato.domains.member.entities.BookMark;
-import allG.weato.domains.member.entities.Tag;
+//import allG.weato.domains.member.entities.Tag;
 import allG.weato.domains.enums.TagType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,11 +31,9 @@ public class Newsletter {
     @Enumerated(EnumType.STRING)
     private TagType tagType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id")
-    private Tag tag;
-
-
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "tag_id")
+//    private Tag tag;
 
 
     public Newsletter(String title, String content, TagType tagType){
@@ -45,14 +43,18 @@ public class Newsletter {
         createdAt=LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 
+    public void setTagType(TagType tagType){
+        this.tagType=tagType;
+    }
+
     public void setBookMark(BookMark bookMark) {
         this.bookMark=bookMark;
     }
 
-    public void classifyByTag(Tag tag){
-        this.tag=tag;
-        tag.addNewsletter(this);
-    }
+//    public void classifyByTag(Tag tag){
+//        this.tag=tag;
+//        tag.addNewsletter(this);
+//    }
 
     public void changeTitle(String title) {
         this.title=title;
