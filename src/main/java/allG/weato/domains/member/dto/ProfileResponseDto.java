@@ -30,7 +30,7 @@ public class ProfileResponseDto {
     public ProfileResponseDto(Member member){
         name = member.getName();
         newsletterEmail= member.getNewsletterEmail();
-        imageUrl=member.getProfile().getImgUrl();
+        imageUrl=member.getProfile().getImageUrl();
         level=member.getLevel().getLevel();
         nickname=member.getNickname();
         birthyear=member.getBirthyear();

@@ -5,6 +5,7 @@ import allG.weato.domains.comment.entities.CommentLike;
 import allG.weato.domains.enums.ProviderType;
 import allG.weato.domains.enums.Role;
 import allG.weato.domains.enums.TagType;
+import allG.weato.domains.member.dto.update.UpdateProfileRequestDto;
 import allG.weato.domains.post.entities.Post;
 import allG.weato.domains.post.entities.PostLike;
 import allG.weato.domains.post.entities.Scrap;
@@ -100,7 +101,6 @@ public class Member {
     //Constructor with Args
     @Builder
     public Member(String name, String email,String gender,String birthyear, Role role,ProviderType providerType){
-        initMember();
         this.name=name;
         this.email=email;
         this.role=role;
@@ -108,11 +108,12 @@ public class Member {
         this.birthyear=birthyear;
         this.providerType=providerType;
         this.createAt=LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        initMember();
     }
-    public Member update(String name)
+    public void changeNickname(String nickname)
     {
-        this.name = name;
-        return this;
+        this.nickname=nickname;
+
     }
     public void changeName(String name){
         this.name=name;
@@ -123,8 +124,8 @@ public class Member {
     public void initMember(){
         Level level = new Level();
         BookMark bookMark = new BookMark();
-        this.bookMark=bookMark;
-        this.level=level;
+        initBookMark(bookMark);
+
     }
 
 //    public String getRole(Role role){
@@ -164,13 +165,27 @@ public class Member {
         postLike.setOwner(this);
     }
 
+    public void changeTagTypesByUpdate(UpdateProfileRequestDto requestDto){
+        tagTypeList.clear();
+        if(requestDto.getTagCleaning()) tagTypeList.add(TagType.CLEANING);
+        if(requestDto.getTagEnvironment()) tagTypeList.add(TagType.ENVIRONMENT);
+        if(requestDto.getTagFood()) tagTypeList.add(TagType.FOOD);
+        if(requestDto.getTagDrug()) tagTypeList.add(TagType.DRUG);
+        if(requestDto.getTagSleep()) tagTypeList.add(TagType.SLEEP);
+        if(requestDto.getOtherwise()) tagTypeList.add(TagType.OTHERWISE);
+    }
+
 //    public void addTag(Tag tag){
 //        tags.add(tag);
 //        tag.setOwner(this);
 //    }
 
-    public void setBookMark(BookMark bookMark){
+    public void initBookMark(BookMark bookMark){
         this.bookMark=bookMark;
+    }
+
+    public void initLevel(Level level){
+        this.level=level;
     }
 
     public void deletePostLike(PostLike postLike) {

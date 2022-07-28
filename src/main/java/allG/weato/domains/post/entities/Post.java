@@ -31,6 +31,8 @@ public class Post {
     private String content;
     private int likeCount ;
 
+    private int scrapCount;
+
     private int views;
     @ManyToOne(fetch = FetchType.LAZY) //멤버 - 게시글 외래키의 주인 > post
     @JoinColumn(name = "member_id")
@@ -118,5 +120,9 @@ public class Post {
     public void deleteComment(Comment comment) {
         if(commentList.contains(comment)) commentList.remove(comment);
         else throw new IllegalStateException("존재하지 않는 댓글입니다");
+    }
+
+    public void addScrapCount() {
+        scrapCount++;
     }
 }

@@ -21,6 +21,7 @@ public class Scrap {
     public void addPost(Post post){
         postList.add(post);
         post.scrapedBy(this);
+        post.addScrapCount();
     }
 
 }

@@ -35,7 +35,6 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    @Transactional
     public Post findPostById(Long id) {
         return postRepository.findPostById(id);
     }

@@ -12,12 +12,10 @@ import java.time.LocalDateTime;
 public class NewsletterResponseDto {
     private String title;
     private TagType tagType;
-    private String content;
     private LocalDateTime createAt;
 
     public NewsletterResponseDto(Newsletter newsletter){
         title=newsletter.getTitle();
-        content=newsletter.getContent();
         tagType=newsletter.getTagType();
         createAt=newsletter.getCreatedAt();
     }

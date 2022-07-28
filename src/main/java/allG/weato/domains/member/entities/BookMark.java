@@ -25,9 +25,8 @@ public class BookMark {
     @OneToMany(mappedBy = "bookMark")
     private List<Newsletter> newsletterList = new ArrayList<>();
 
-    public void setMember(Member member) {
+    public void initMember(Member member) {
         this.member = member;
-        member.setBookMark(this);
     }
 
     public void addNewsLetter(Newsletter newsletter){

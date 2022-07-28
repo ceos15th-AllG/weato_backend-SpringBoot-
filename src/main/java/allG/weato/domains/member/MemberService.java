@@ -1,8 +1,12 @@
 package allG.weato.domains.member;
 
 import allG.weato.domains.comment.entities.Comment;
+import allG.weato.domains.enums.TagType;
+import allG.weato.domains.member.dto.create.CreateMemberRequest;
+import allG.weato.domains.member.dto.update.UpdateProfileRequestDto;
 import allG.weato.domains.member.entities.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,4 +64,28 @@ public class MemberService {
         member.addComment(comment);
     }
 
+    @Transactional
+    public void createMemberDetail(Member member, CreateMemberRequest request) {
+        member.changeNickname(request.getNickname());
+        member.getProfile().changeImgurl(request.getImageUrl());
+        member.changeNewsletterEmail(request.getNewsletterEmail());
+        if(request.getDrug()) member.getTagTypeList().add(TagType.DRUG);
+        if(request.getCleaning()) member.getTagTypeList().add(TagType.CLEANING);
+        if(request.getFood()) member.getTagTypeList().add(TagType.FOOD);
+        if(request.getEnvironment()) member.getTagTypeList().add(TagType.ENVIRONMENT);
+        if(request.getSleep()) member.getTagTypeList().add(TagType.SLEEP);
+        memberRepository.save(member);
+    }
+
+    @Transactional
+    public void upadateProfile(Member member, UpdateProfileRequestDto request) {
+        member.getProfile().changeImgurl(request.getImageUrl());
+        member.changeNickname(request.getNickname());
+        member.getAdditionalInfo().setMedicalHistory(request.getMedicalHistory());
+        member.getAdditionalInfo().setIsFamilyHistory(request.getIsFamilyHistory());
+        member.getAdditionalInfo().setIsRecurrence(request.getIsRecurrence());
+        member.getAdditionalInfo().changeManagement(request);
+        member.changeTagTypesByUpdate(request);
+        memberRepository.save(member);
+    }
 }

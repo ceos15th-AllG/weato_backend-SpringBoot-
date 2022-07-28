@@ -186,6 +186,14 @@ public class PostController {
         return HttpStatus.NO_CONTENT;
     }
 
+    @PostMapping("/posts/{postId}/bookmark")
+    public void addBookmark(@PathVariable("postId")Long postId){
+        Post post = postService.findPostById(postId);
+        JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email =  principal.getUsername();
+        Member member = memberService.findByEmail(email);
+    }
+
 
 
 

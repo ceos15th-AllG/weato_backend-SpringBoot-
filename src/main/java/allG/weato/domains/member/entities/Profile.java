@@ -8,7 +8,6 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class Profile {
 
@@ -18,5 +17,12 @@ public class Profile {
 
     private String introduction;
 
-    private String imgUrl;
+    private String imageUrl;
+
+    public void changeImgurl(String imageUrl){
+        this.imageUrl=imageUrl;
+    }
+    public void changeIntroduction(String introduction){
+        this.introduction=introduction;
+    }
 }
