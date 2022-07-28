@@ -123,6 +123,7 @@ public class Member {
     //init function with constructor of OneToOne things
     public void initMember(){
         Level level = new Level();
+        initLevel(level);
         BookMark bookMark = new BookMark();
         initBookMark(bookMark);
 

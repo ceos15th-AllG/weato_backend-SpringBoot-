@@ -92,7 +92,6 @@ public class PostController {
         Post post = new Post(request.getTitle(),request.getContent(),request.getBoardType(),LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         post.setOwner(findMember);
         for (String  s : request.getImageUrls()) {
-
             Attachment attachment = new Attachment(s);
             post.addAttachments(attachment);
         }

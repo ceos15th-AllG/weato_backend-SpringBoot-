@@ -38,7 +38,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/api/members")
+    @GetMapping("/members")
     public MemberResponseDto getUser() {
 
         JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
