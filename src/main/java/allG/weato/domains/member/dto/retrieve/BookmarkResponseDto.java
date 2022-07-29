@@ -21,19 +21,19 @@ public class BookmarkResponseDto {
     public BookmarkResponseDto(Member member){
         name = member.getName();
         email=member.getNewsletterEmail();
-        newsletterResponseDtos=member.getBookMark().getNewsletterList()
+        newsletterResponseDtos=member.getBookMarkList()
                 .stream()
-                .map(n -> new NewsletterResponseDto(n))
+                .map(n -> new NewsletterResponseDto(n.getNewsletter()))
                 .collect(Collectors.toList());
     }
 
     public BookmarkResponseDto(Member member, TagType tagType){
         name=member.getName();
         email=member.getNewsletterEmail();
-        newsletterResponseDtos=member.getBookMark().getNewsletterList()
+        newsletterResponseDtos=member.getBookMarkList()
                 .stream()
-                .filter(n->n.getTagType()==tagType)
-                .map(n->new NewsletterResponseDto(n))
+                .filter(n->n.getNewsletter().getTagType()==tagType)
+                .map(n->new NewsletterResponseDto(n.getNewsletter()))
                 .collect(Collectors.toList());
     }
 }

@@ -1,7 +1,10 @@
 package allG.weato.domains.newsletter;
 
+import allG.weato.domains.member.entities.BookMark;
+import allG.weato.domains.member.entities.Member;
 import allG.weato.domains.newsletter.entities.Newsletter;
 import allG.weato.domains.enums.TagType;
+import allG.weato.domains.newsletter.entities.NewsletterLike;
 import allG.weato.domains.newsletter.newsletterDto.NewsletterUpdateRequestDto;
 import allG.weato.validation.CommonErrorCode;
 import allG.weato.validation.RestException;
@@ -34,13 +37,13 @@ public class NewsletterService {
     }
 
     public Page<Newsletter> findPage(Integer num){
-        PageRequest pageRequest = PageRequest.of(num,8,Sort.by(Sort.Direction.DESC,"createAt"));
+        PageRequest pageRequest = PageRequest.of(num,8,Sort.by(Sort.Direction.DESC,"createdAt"));
         Page<Newsletter> result = newsletterRepository.findAll(pageRequest);
         return result;
     }
 
     public Page<Newsletter> findPageByTag(TagType tagType, Integer num){
-        PageRequest pageRequest = PageRequest.of(num,8, Sort.by(Sort.Direction.DESC,"createAt"));
+        PageRequest pageRequest = PageRequest.of(num,8, Sort.by(Sort.Direction.DESC,"createdAt"));
         Page<Newsletter> pages = newsletterRepository.findNewslettersByTagType(tagType,pageRequest);
         return pages;
     }
@@ -66,7 +69,7 @@ public class NewsletterService {
             newsletter.changeContent(request.getUpdatedContent());
             counter++;
         }
-        if(counter!=0) newsletter.changeCreateAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+        if(counter!=0) newsletter.changeCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
     }
 
 
@@ -75,5 +78,33 @@ public class NewsletterService {
     public void deleteNewsletter(Newsletter newsletter){
         if(newsletter==null) throw new RestException(CommonErrorCode.RESOURCE_NOT_FOUND);
         newsletterRepository.delete(newsletter);
+    }
+
+    @Transactional
+    public void addBookMark(Member member, Newsletter newsletter, BookMark bookMark) {
+        member.addBookMark(bookMark);
+        newsletter.addBookMark(bookMark);
+
+    }
+
+    @Transactional
+    @Modifying
+    public void deleteBookMark(Member member,Newsletter newsletter,BookMark bookMark){
+        member.deleteBookMark(bookMark);
+        newsletter.deleteBookMark(bookMark);
+        newsletterRepository.deleteBookMark(bookMark.getId());
+    }
+
+    @Transactional
+    public void addNewsletterLike(Member member, Newsletter newsletter, NewsletterLike newsletterLike) {
+        member.addNewsletterLike(newsletterLike);
+        newsletter.addNewsletterLike(newsletterLike);
+    }
+
+    @Transactional
+    public void deleteNewsletterLike(Member findMember, Newsletter newsletter, NewsletterLike newsletterLike) {
+        findMember.deleteNewsletterLike(newsletterLike);
+        newsletter.addNewsletterLike(newsletterLike);
+        newsletterRepository.deleteNewsletterLike(newsletterLike.getId());
     }
 }

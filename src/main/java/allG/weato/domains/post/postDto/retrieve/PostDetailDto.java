@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
-public class PostDetail {
+public class PostDetailDto {
     String Author;
     String title;
     String content;
@@ -21,14 +21,17 @@ public class PostDetail {
 
     int views;
 
-    public PostDetail(Post post) {
+    int scrapCount;
+
+    public PostDetailDto(Post post) {
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.createdAt = post.getCreateAt();
+        this.createdAt = post.getCreatedAt();
         this.likeCount = post.getLikeCount();
         this.Author=post.getMember().getName();
         this.views=post.getViews();
         this.comments = post.getCommentList().stream()
                 .map( c -> new CommentDto(c)).collect(Collectors.toList());
+        this.scrapCount=post.getScrapList().size();
     }
 }

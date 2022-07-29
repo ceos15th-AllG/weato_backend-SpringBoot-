@@ -38,7 +38,7 @@ public class CommentsController {
     private final CommentService commentService;
 
     @Operation(summary = "add comment to post", description = "댓글 생성")
-    @PostMapping("/api/post/{id}/comments")
+    @PostMapping("/api/posts/{id}/comments")
     public CreateCommentResponse addComment(@PathVariable("id") Long id, @RequestBody @Valid CreateCommentRequest request)
     {
         JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -54,7 +54,7 @@ public class CommentsController {
     }
 
     @Operation(summary = "update specific comment", description = "댓글 수정")
-    @PatchMapping("/api/post/{postId}/comments/{commentId}")
+    @PatchMapping("/api/posts/{postId}/comments/{commentId}")
     public UpdatedCommentDto updateComment(@PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId,String content){
         Comment comment = commentService.findCommentById(commentId);
         if(comment==null) throw new RestException(CommonErrorCode.RESOURCE_NOT_FOUND);
@@ -63,7 +63,7 @@ public class CommentsController {
     }
 
     @Operation(summary = "delete specific comment", description = "댓글 삭제")
-    @DeleteMapping("/api/post/{postId}/comments/{commentId}")
+    @DeleteMapping("/api/posts/{postId}/comments/{commentId}")
     public HttpStatus deleteComment(
             @PathVariable("postId") Long postId,
             @PathVariable("commentId") Long commentId){

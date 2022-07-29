@@ -5,6 +5,7 @@ import allG.weato.domains.member.entities.Member;
 import allG.weato.domains.post.entities.Post;
 import allG.weato.domains.post.entities.PostLike;
 import allG.weato.domains.enums.BoardType;
+import allG.weato.domains.post.entities.Scrap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,12 +45,12 @@ public class PostService {
     }
 
     public Page<Post> findPostWithPaging(Integer page){
-        PageRequest pageRequest = PageRequest.of(page,20, Sort.by(Sort.Direction.DESC,"createAt"));
+        PageRequest pageRequest = PageRequest.of(page,20, Sort.by(Sort.Direction.DESC,"createdAt"));
         return postRepository.findAll(pageRequest);
     }
 
     public Page<Post> findPostPageWithBoardType(Integer page, BoardType boardType){
-        PageRequest pageRequest = PageRequest.of(page,20,Sort.by(Sort.Direction.DESC,"createAt"));
+        PageRequest pageRequest = PageRequest.of(page,20,Sort.by(Sort.Direction.DESC,"createdAt"));
         return postRepository.findPostsByBoardType(pageRequest,boardType);
     }
 
@@ -64,10 +65,10 @@ public class PostService {
         post.changeTitle(title);
     }
 
-    @Transactional
-    public void addViews(Post post) {
-        post.addViews();
-    }
+//    @Transactional
+//    public void addViews(Post post) {
+//        post.addViews();
+//    }
 
     @Transactional
     public void updatePost(Post post, String title, String content) {
@@ -94,6 +95,19 @@ public class PostService {
         member.deletePostLike(postLike);
         post.deleteLike(postLike);
         postRepository.deletePostLikeById(postLike.getId());
+    }
+
+    @Transactional
+    public void scrapPost(Member member, Post post, Scrap scrap) {
+        member.addScrap(scrap);
+        post.addScrap(scrap);
+    }
+
+    @Transactional
+    public void deleteScrap(Member member, Post post, Scrap scrap){
+        member.deleteScrap(scrap);
+        post.deleteScrap(scrap);
+        postRepository.deleteScrapById(scrap.getId());
     }
 }
 

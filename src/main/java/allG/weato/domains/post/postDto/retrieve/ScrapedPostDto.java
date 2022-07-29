@@ -27,6 +27,6 @@ public class ScrapedPostDto {
         boardType=post.getBoardType();
         likeCount= post.getLikeCount();
         views=post.getViews();
-        scrapedCount=post.getScrapCount();
+        scrapedCount=post.getScrapList().size();
     }
 }

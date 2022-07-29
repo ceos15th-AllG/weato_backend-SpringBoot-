@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,16 +26,18 @@ public class Newsletter {
     private LocalDateTime createdAt; //작성일시
 
     private int likeCount = 0 ;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_mark_id")
-    private BookMark bookMark;
+
+    private int views=0;
+
+
+    @OneToMany(mappedBy = "newsletter",cascade = CascadeType.ALL) //단뱡힝이지만 양방향으로 처리. 역추적 할 일 없음.
+    private List<BookMark> bookMarkList = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private TagType tagType;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "tag_id")
-//    private Tag tag;
+    @OneToMany(mappedBy = "newsletter",cascade = CascadeType.ALL)
+    private List<NewsletterLike> newsletterLikeList=new ArrayList<>();
 
 
     public Newsletter(String title, String content, TagType tagType){
@@ -47,8 +51,9 @@ public class Newsletter {
         this.tagType=tagType;
     }
 
-    public void setBookMark(BookMark bookMark) {
-        this.bookMark=bookMark;
+    public void addBookMark(BookMark bookMark) {
+        bookMarkList.add(bookMark);
+        bookMark.initNewsletter(this);
     }
 
 //    public void classifyByTag(Tag tag){
@@ -64,19 +69,26 @@ public class Newsletter {
         this.content=content;
     }
 
-    public void changeCreateAt(LocalDateTime updatedAt){
+    public void changeCreatedAt(LocalDateTime updatedAt){
         createdAt=updatedAt;
     }
 
+    public void deleteBookMark(BookMark bookMark){
+        bookMarkList.remove(bookMark);
+        bookMark.initNewsletter(null);
+    }
+    public void addViews() {
+        views++;
+    }
 
+    public void addNewsletterLike(NewsletterLike newsletterLike){
+        newsletterLikeList.add(newsletterLike);
+        newsletterLike.initNewsletter(this);
+    }
 
-
-
-
-
-
-
-
-
+    public void deleteNewsletter(NewsletterLike newsletterLike){
+        newsletterLikeList.remove(newsletterLike);
+        newsletterLike.initNewsletter(null);
+    }
 
 }

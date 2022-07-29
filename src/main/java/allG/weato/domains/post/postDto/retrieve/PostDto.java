@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 public class PostDto {
-    private Long id;
     private String title;
     private LocalDateTime createdAt;
     private String author;
@@ -18,15 +17,14 @@ public class PostDto {
 
     private int views;
 
-    private int likecounter;
+    private int likeCounter;
 
     public PostDto(Post post) {
-        id = post.getId();
         title = post.getTitle();
-        createdAt = post.getCreateAt();
+        createdAt = post.getCreatedAt();
         author = post.getMember().getName();
         commentsCounter = post.getCommentList().size();
         views= post.getViews();
-        likecounter=post.getLikeCount();
+        likeCounter=post.getLikeCount();
     }
 }

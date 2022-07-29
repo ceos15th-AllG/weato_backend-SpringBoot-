@@ -4,7 +4,9 @@ import allG.weato.domains.comment.entities.Comment;
 import allG.weato.domains.enums.TagType;
 import allG.weato.domains.member.dto.create.CreateMemberRequest;
 import allG.weato.domains.member.dto.update.UpdateProfileRequestDto;
+import allG.weato.domains.member.entities.BookMark;
 import allG.weato.domains.member.entities.Member;
+import allG.weato.domains.newsletter.entities.Newsletter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,7 @@ public class MemberService {
 
     }
 
+    @Transactional
     public void save(Member member){
         memberRepository.save(member);
     }
@@ -74,6 +77,7 @@ public class MemberService {
         if(request.getFood()) member.getTagTypeList().add(TagType.FOOD);
         if(request.getEnvironment()) member.getTagTypeList().add(TagType.ENVIRONMENT);
         if(request.getSleep()) member.getTagTypeList().add(TagType.SLEEP);
+        if(request.getEtc()) member.getTagTypeList().add(TagType.OTHERWISE);
         memberRepository.save(member);
     }
 
@@ -88,4 +92,6 @@ public class MemberService {
         member.changeTagTypesByUpdate(request);
         memberRepository.save(member);
     }
+
+
 }

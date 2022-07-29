@@ -25,15 +25,13 @@ public class Post {
     @Enumerated(EnumType.STRING)
     private BoardType boardType;
 
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     private String title;
     private String content;
     private int likeCount ;
 
-    private int scrapCount;
-
-    private int views;
+    private int views=0;
     @ManyToOne(fetch = FetchType.LAZY) //멤버 - 게시글 외래키의 주인 > post
     @JoinColumn(name = "member_id")
     @JsonIgnore
@@ -49,11 +47,8 @@ public class Post {
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
     private List<PostLike> postLikeList = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    @JoinColumn(name = "scrap_id")
-    private Scrap scrap;
-
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Scrap> scrapList = new ArrayList<>();
 
 
     public int getLikeCount(){
@@ -64,19 +59,19 @@ public class Post {
         this.title=title;
         this.content=content;
         this.boardType=boardType;
-        this.createAt=createAt;
+        this.createdAt=createAt;
     }
 
     //setter 대용 메소드
     public void changeContent(String content){
         this.content=content;
-        createAt=LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        createdAt=LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 
     public void changeTitle(String title)
     {
         this.title=title;
-        createAt=LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        createdAt=LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 
 
@@ -113,8 +108,14 @@ public class Post {
         this.views++;
     }
 
-    public void scrapedBy(Scrap scrap){
-        this.scrap=scrap;
+    public void addScrap(Scrap scrap){
+        scrapList.add(scrap);
+        scrap.initPost(this);
+    }
+
+    public void deleteScrap(Scrap scrap){
+        scrapList.remove(scrap);
+        scrap.initPost(null);
     }
 
     public void deleteComment(Comment comment) {
@@ -122,7 +123,4 @@ public class Post {
         else throw new IllegalStateException("존재하지 않는 댓글입니다");
     }
 
-    public void addScrapCount() {
-        scrapCount++;
-    }
 }

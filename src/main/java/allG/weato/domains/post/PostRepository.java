@@ -22,6 +22,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
       @Query("delete from PostLike pl where pl.id = :postLikeId")
       void deletePostLikeById(@Param("postLikeId") Long postLikeId);
 
+      @Modifying
+      @Transactional
+      @Query("delete from Scrap s where s.id = :scrapId")
+      void deleteScrapById(@Param("scrapId")Long scrapId);
+
 //    @Query("delete from Comment c where c.id = :commentId")
 //    void deleteCommentById(@Param("commentId") Long commentId);
 

@@ -1,12 +1,10 @@
 package allG.weato.domains.member;
 
 
+import allG.weato.domains.enums.BoardType;
 import allG.weato.domains.enums.TagType;
 import allG.weato.domains.member.MemberService;
-import allG.weato.domains.member.dto.AdditionalInfoRequestDto;
-import allG.weato.domains.member.dto.AdditionalInfoResponseDto;
-import allG.weato.domains.member.dto.MemberResponseDto;
-import allG.weato.domains.member.dto.ProfileResponseDto;
+import allG.weato.domains.member.dto.*;
 import allG.weato.domains.member.dto.create.CreateMemberRequest;
 import allG.weato.domains.member.dto.create.CreateMemberResponse;
 import allG.weato.domains.member.dto.retrieve.BookmarkResponseDto;
@@ -21,6 +19,7 @@ import allG.weato.oauth2.response.ApiResponse;
 import allG.weato.validation.CommonErrorCode;
 import allG.weato.validation.ErrorCode;
 import allG.weato.validation.RestException;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,6 +37,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @Operation(summary = "Current member", description = "현재 로그인된 멤버")
     @GetMapping("/members")
     public MemberResponseDto getUser() {
 
@@ -48,6 +48,7 @@ public class MemberController {
         return new MemberResponseDto(member);
     }
 
+    @Operation(summary = "Create member profile(profile)", description = "멤버 프로필 생성")
     @PostMapping("/members/{memberId}")
     public CreateMemberResponse createMemberCompletely(@PathVariable("memberId") Long memberId, @RequestBody @Valid CreateMemberRequest request){
         Member member = memberService.findById(memberId);
@@ -57,6 +58,7 @@ public class MemberController {
 
 
 
+    @Operation(summary = "Retrieve specific member", description = "특정 멤버 조회")
     @GetMapping("/members/{memberId}")// my-page
     public MemberResponseDto showMember(@PathVariable("memberId") Long memberId){
 
@@ -64,6 +66,7 @@ public class MemberController {
         return new MemberResponseDto(member);
 
     }
+    @Operation(summary = "Retrieve profile of specific member", description = "특정 멤버 프로필 조회")
     @GetMapping("/members/{memberId}/profile")//프로필
     public ProfileResponseDto showMemberProfile(@PathVariable("memberId") Long memberId){
 
@@ -74,6 +77,7 @@ public class MemberController {
         return new ProfileResponseDto(member);
     }
 
+    @Operation(summary = "Update member profile", description = "멤버 프로필 수정")
     @PatchMapping("/members/{memberId}/profile")
     public UpdateProfileResponseDto updateMemberProfile(@PathVariable("memberId") Long memberId, @RequestBody @Valid UpdateProfileRequestDto request){
         Member member = memberService.findById(memberId);
@@ -81,18 +85,21 @@ public class MemberController {
         return new UpdateProfileResponseDto(member);
     }
 
+    @Operation(summary = "Create Additional-info of member", description = "멤버 추가정보 생성")
     @PostMapping("/members/{memberId}/additional-info")//추가정보
     public AdditionalInfoResponseDto createMemberAdditionalInfo(@PathVariable("memberId") Long memberId, @RequestBody @Valid AdditionalInfoRequestDto request){
         JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email =  principal.getUsername();
         Member member = memberService.findByEmail(email);
         if(member.getId()!=memberId) throw new RestException(CommonErrorCode.NOT_AUTHORIZATED);
-        AdditionalInfo additionalInfo =AdditionalInfo.builder()
-                .medicalHistory(request.getYears())
-                .isFamilyHistory(request.getFamilyHistory())
-                .isRecurrence(request.getRecurrence())
-                .symptomDegree(request.getSymptomDegree())
-                .build();
+//        AdditionalInfo additionalInfo =AdditionalInfo.builder()
+//                .medicalHistory(request.getYears())
+//                .isFamilyHistory(request.getFamilyHistory())
+//                .isRecurrence(request.getRecurrence())
+//                .symptomDegree(request.getSymptomDegree())
+//                .build();
+
+        AdditionalInfo additionalInfo = new AdditionalInfo(request.getYears(), request.getRecurrence(),request.getFamilyHistory(),request.getSymptomDegree());
         additionalInfo.changeManagement(request);
         member.setAdditional_info(additionalInfo);
         memberService.save(member);
@@ -101,30 +108,27 @@ public class MemberController {
 
     }
 
-//    @GetMapping("/members/{memberId}/bookmarks") //북마크
-//    public BookmarkResponseDto showBookmark(@PathVariable("memberId") Long memberId){
-//        Member member = memberService.findById(memberId);
-//        return new BookmarkResponseDto(member);
-//    }
 
+    @Operation(summary = "Retrieve post which is bookmarked", description = "북마크된 게시글 조회")
     @GetMapping("/members/{memberId}/bookmarks")
-    public BookmarkResponseDto showBookmarkByTagType(@RequestParam(value = "tag") TagType tagType
+    public BookmarkResponseDto showBookmarkByTagType(@RequestParam(value = "tag",defaultValue = "all") String code
             ,@PathVariable("memberId") Long memberId){
+        code=code.toUpperCase();
+        TagType tagType = TagType.valueOf(code);
         Member member = memberService.findById(memberId);
-        if(tagType==null) return new BookmarkResponseDto(member);
-        return new BookmarkResponseDto(member,tagType);
+        if(tagType==tagType.ALL) return new BookmarkResponseDto(member);
+        else return new BookmarkResponseDto(member,tagType);
     }
 
     @GetMapping("/members/{memberId}/scraped")
-    public void showScrap(@PathVariable("memberId") Long memberId){
+    public MemberScrapedPostDto showScrap(@PathVariable("memberId") Long memberId
+            ,@RequestParam(value = "type",defaultValue = "all")String code){
+
+        code=code.toUpperCase();
+        BoardType boardType = BoardType.valueOf(code);
         Member member = memberService.findById(memberId);
+        if(boardType==BoardType.ALL) return new MemberScrapedPostDto(member);
+        else return new MemberScrapedPostDto(member,boardType);
 
     }
-
-
-
-
-    
-    
-    
 }

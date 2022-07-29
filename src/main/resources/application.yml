@@ -9,7 +9,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop #entity를 생성시점에 지우고 다 다시 생성
+      ddl-auto: update #다른 부분만 바꿈
     properties:
       hibernate:
         #        show_sql: true

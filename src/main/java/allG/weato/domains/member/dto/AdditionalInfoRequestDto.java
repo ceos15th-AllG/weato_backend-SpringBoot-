@@ -14,7 +14,7 @@ public class AdditionalInfoRequestDto {
 
     private Boolean moisturizer;
     private Boolean steroid;
-    private Boolean Diet;
+    private Boolean diet;
     private Boolean drug;
     private Boolean cleaning;
     private Boolean ointment;

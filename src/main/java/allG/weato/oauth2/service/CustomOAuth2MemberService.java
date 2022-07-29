@@ -49,7 +49,7 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
         ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
         //provider타입에 따라서 각각 다르게 userInfo가져온다. (가져온 필요한 정보는 OAuth2UserInfo로 동일하다)
         OAuth2MemberInfo memberInfo = OAuth2MemberInfoFactory.getOAuth2MemberInfo(providerType, user.getAttributes());
-        System.out.println("memberInfo.getEmail() = " + memberInfo.getEmail());
+        System.out.println("memberInfo.name = " +memberInfo.getName()+", memberInfo.getEmail() = " + memberInfo.getEmail());
         Member savedMember = memberRepository.findMemberByEmail(memberInfo.getEmail());
 
         if (savedMember!= null)
@@ -65,7 +65,6 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
             savedMember = createMember(memberInfo, providerType);
         }
         System.out.println("token = "+ jwtTokenUtil.generateToken(memberInfo.getEmail()));
-        System.out.println("user.getAttributes() = " + user.getAttributes());
 
         return new JwtMemberDetails(savedMember, user.getAttributes());
     }

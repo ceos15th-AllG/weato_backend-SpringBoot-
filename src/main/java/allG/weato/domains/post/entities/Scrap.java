@@ -1,5 +1,6 @@
 package allG.weato.domains.post.entities;
 
+import allG.weato.domains.member.entities.Member;
 import allG.weato.domains.post.entities.Post;
 import lombok.Getter;
 
@@ -15,13 +16,20 @@ public class Scrap {
     @Column(name = "scrap_id")
     private Long id;
 
-    @OneToMany(mappedBy = "scrap")
-    private List<Post> postList = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-    public void addPost(Post post){
-        postList.add(post);
-        post.scrapedBy(this);
-        post.addScrapCount();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    public void initMember(Member member){
+        this.member=member;
+    }
+
+    public void initPost(Post post){
+        this.post=post;
     }
 
 }

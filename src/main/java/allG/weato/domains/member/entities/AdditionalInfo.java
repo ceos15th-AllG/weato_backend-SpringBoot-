@@ -30,7 +30,14 @@ public class AdditionalInfo {
 
     private SymptomDegree symptomDegree;
 
-    @ElementCollection
+
+    public AdditionalInfo(int medicalHistory, Boolean isRecurrence, Boolean isFamilyHistory, SymptomDegree symptomDegree){
+        this.medicalHistory=medicalHistory;
+        this.isRecurrence=isRecurrence;
+        this.isFamilyHistory=isFamilyHistory;
+        this.symptomDegree=symptomDegree;
+    }
+    @ElementCollection(targetClass = ManagementType.class)
     private List<ManagementType> managementTypes = new ArrayList<>();
 
     public void changeMedicalHistory(Integer medicalHistory){
@@ -38,7 +45,7 @@ public class AdditionalInfo {
     }
 
     public void changeManagement(AdditionalInfoRequestDto request){
-        managementTypes.clear();
+        if(!managementTypes.isEmpty()) managementTypes.clear();
         if(request.getCleaning()) managementTypes.add(ManagementType.CLEANING);
         if(request.getSteroid()) managementTypes.add(ManagementType.STEROID);
         if(request.getDiet()) managementTypes.add(ManagementType.DIET);

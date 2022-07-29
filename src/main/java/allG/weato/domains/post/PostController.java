@@ -1,14 +1,16 @@
 package allG.weato.domains.post;
 
-import allG.weato.config.auth.dto.SessionMember;
+import allG.weato.domains.enums.BoardType;
 import allG.weato.domains.post.entities.Attachment;
 import allG.weato.domains.member.entities.Member;
 import allG.weato.domains.post.entities.Post;
 import allG.weato.domains.post.entities.PostLike;
+import allG.weato.domains.post.entities.Scrap;
+import allG.weato.domains.post.postDto.create.CreatePostScrapDto;
 import allG.weato.dto.AddLikeDto;
 import allG.weato.domains.post.postDto.create.CreatePostRequest;
 import allG.weato.domains.post.postDto.create.CreatePostResponse;
-import allG.weato.domains.post.postDto.retrieve.PostDetail;
+import allG.weato.domains.post.postDto.retrieve.PostDetailDto;
 import allG.weato.domains.post.postDto.retrieve.PostDto;
 import allG.weato.dto.error.Error400;
 import allG.weato.dto.error.Error404;
@@ -57,10 +59,21 @@ public class PostController {
             @ApiResponse(responseCode = "500",description = "INTERNAL SERVER ERROR", content = @Content(schema = @Schema(implementation =Error500.class )))
     })
     @GetMapping("/posts")
-    public ResultForPaging showPosts(@RequestParam(value = "page",defaultValue = "1") Integer page) {
+    public ResultForPaging showPosts(@RequestParam(value="type",defaultValue = "all") String type
+            ,@RequestParam(value = "page",defaultValue = "1") Integer page) {
 
-        Page<Post> findPosts = postService.findPostWithPaging(page-1);
+        BoardType boardType=BoardType.valueOf(type.toUpperCase());
+        Page<Post> findPosts;
+
+        if(boardType==BoardType.ALL) {
+            findPosts = postService.findPostWithPaging(page-1);
+        }
+        else {
+            findPosts = postService.findPostPageWithBoardType(page-1,boardType);
+        }
+
         if(findPosts.isEmpty()) throw new RestException(CommonErrorCode.RESOURCE_NOT_FOUND);
+
         List<Post> posts = findPosts.getContent();
         int lastPageNum = findPosts.getTotalPages();
         int current = page;
@@ -108,13 +121,14 @@ public class PostController {
             @ApiResponse(responseCode = "500",description = "INTERNAL SERVER ERROR")
     })
     @GetMapping("/posts/{id}")
-    public PostDetail showPost(@PathVariable("id") Long id) {
+    public PostDetailDto showPost(@PathVariable("id") Long id) {
       Post post = postService.findPostById(id);
       if(post==null) throw new RestException(CommonErrorCode.RESOURCE_NOT_FOUND);
-      postService.addViews(post);
-      PostDetail postDetail = new PostDetail(post);
+      post.addViews();
+      postService.save(post);
+      PostDetailDto postDetailDto = new PostDetailDto(post);
 
-      return postDetail;
+      return postDetailDto;
     }
 
 
@@ -185,18 +199,44 @@ public class PostController {
         return HttpStatus.NO_CONTENT;
     }
 
-    @PostMapping("/posts/{postId}/bookmark")
-    public void addBookmark(@PathVariable("postId")Long postId){
+    @PostMapping("/posts/{postId}/scrap")
+    public CreatePostScrapDto addScrap(@PathVariable("postId")Long postId){
         Post post = postService.findPostById(postId);
+
         JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email =  principal.getUsername();
         Member member = memberService.findByEmail(email);
+
+        Scrap scrap = new Scrap();
+        List<Scrap> scraps = post.getScrapList();
+        for (Scrap scrap1 : scraps) {
+            if(scrap1.getMember().getId()==member.getId()){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"You already scraped it");
+            }
+        }
+        postService.scrapPost(member,post,scrap);
+
+        return new CreatePostScrapDto(post);
     }
 
+    @DeleteMapping("posts/{postId}/scrap")
+    public HttpStatus deleteScrap(@PathVariable("postId") Long postId){
+        Post post = postService.findPostById(postId);
 
 
+        JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email =  principal.getUsername();
+        Member member = memberService.findByEmail(email);
 
+        for(Scrap scrap : post.getScrapList()){
+            if(scrap.getMember().getId()==member.getId()){
+                postService.deleteScrap(member,post,scrap);
+                break;
+            }
+        }
+        return HttpStatus.NO_CONTENT;
 
+    }
     @Data
     @AllArgsConstructor
     static class ResultForPaging<T>{

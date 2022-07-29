@@ -24,7 +24,7 @@ public class CreatePostResponse {
         Author = post.getMember().getName();
         title=post.getTitle();
         content = post.getContent();
-        createdAt = post.getCreateAt();
+        createdAt = post.getCreatedAt();
         boardType=post.getBoardType();
         attachments=post.getAttachmentList().stream()
                 .map(a -> new AttachmentDto(a)).collect(Collectors.toList());

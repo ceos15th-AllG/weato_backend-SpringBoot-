@@ -6,6 +6,7 @@ import allG.weato.domains.enums.ProviderType;
 import allG.weato.domains.enums.Role;
 import allG.weato.domains.enums.TagType;
 import allG.weato.domains.member.dto.update.UpdateProfileRequestDto;
+import allG.weato.domains.newsletter.entities.NewsletterLike;
 import allG.weato.domains.post.entities.Post;
 import allG.weato.domains.post.entities.PostLike;
 import allG.weato.domains.post.entities.Scrap;
@@ -67,10 +68,12 @@ public class Member {
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<CommentLike> commentLikeList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
+    private List<NewsletterLike> newsletterLikeList = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "book_mark_id")
-    private BookMark bookMark;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<BookMark> bookMarkList = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name="profile_id")
@@ -90,9 +93,11 @@ public class Member {
     @ElementCollection
     private List<TagType> tagTypeList = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "scrap_id")
-    private Scrap scrap;
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
+    private List<Scrap> scrapList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
+    private List<NewsletterLike> newsletterLikes=new ArrayList<>();
 
 
     //NoArgsConstructor
@@ -108,6 +113,8 @@ public class Member {
         this.birthyear=birthyear;
         this.providerType=providerType;
         this.createAt=LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        this.additional_info_checker=false;
+        this.receiveChecker=false;
         initMember();
     }
     public void changeNickname(String nickname)
@@ -124,14 +131,7 @@ public class Member {
     public void initMember(){
         Level level = new Level();
         initLevel(level);
-        BookMark bookMark = new BookMark();
-        initBookMark(bookMark);
-
     }
-
-//    public String getRole(Role role){
-//        return role.getGrantedAuthority();
-//    }
 
     public void changePassword(String password){
         this.password=password;
@@ -181,8 +181,10 @@ public class Member {
 //        tag.setOwner(this);
 //    }
 
-    public void initBookMark(BookMark bookMark){
-        this.bookMark=bookMark;
+    public void addBookMark(BookMark bookMark){
+        bookMarkList.add(bookMark);
+        bookMark.initMember(this);
+
     }
 
     public void initLevel(Level level){
@@ -208,10 +210,31 @@ public class Member {
         else throw new IllegalStateException("작성하지 않은 댓글을 삭제할 수 없습니다.");
     }
 
-    public void changeEmail(String email) {
-        this.email=email;
+    public void deleteBookMark(BookMark bookMark){
+        bookMarkList.remove(bookMark);
+        bookMark.initMember(null);
     }
 
-    //연관관계 편의 메소드
+    public void addScrap(Scrap scrap){
+        scrapList.add(scrap);
+        scrap.initMember(this);
+    }
+
+    public void deleteScrap(Scrap scrap){
+        scrapList.remove(scrap);
+        scrap.initMember(null);
+    }
+
+    public void addNewsletterLike(NewsletterLike newsletterLike){
+        newsletterLikeList.add(newsletterLike);
+        newsletterLike.initMember(this);
+    }
+
+    public void deleteNewsletterLike(NewsletterLike newsletterLike){
+        newsletterLikeList.remove(newsletterLike);
+        newsletterLike.initMember(null);
+    }
 
 }
+
+
