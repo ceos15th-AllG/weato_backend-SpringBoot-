@@ -103,6 +103,7 @@ public class NewsletterController {
         return  HttpStatus.NO_CONTENT;
     }
 
+    @Operation(summary = "bookmarks to newsletter", description = "뉴스레터에 북마크")
     @PostMapping("/newsletters/{id}/bookmark")
     public BookmarkResponseDto addBookmark(@PathVariable("id")Long id){
         JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -124,6 +125,7 @@ public class NewsletterController {
         return new BookmarkResponseDto(findMember,newsletter);
     }
 
+    @Operation(summary = "delete bookmark to newsletter", description = "북마크 해제")
     @DeleteMapping("/newsletters/{id}/bookmark")
     public BookmarkResponseDto deleteBookmark(@PathVariable("id") Long id){
         JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -142,6 +144,7 @@ public class NewsletterController {
         return new BookmarkResponseDto(findMember,newsletter);
     }
 
+    @Operation(summary = "likes to newsletter", description = "뉴스레터 좋아요")
     @PostMapping("/newsletters/{id}/likes")
     public AddLikeDto addNewsletterLike(@PathVariable("id")Long id){
         Newsletter newsletter = newsletterService.findOneById(id);
@@ -163,6 +166,7 @@ public class NewsletterController {
         return new AddLikeDto(newsletter.getId(),newsletter.getNewsletterLikeList().size());
     }
 
+    @Operation(summary = "delete likes to comment", description = "댓글 좋아요 삭제")
     @DeleteMapping("/newsletters/{id}/likes")
     public HttpStatus deleteNewsletterLike(@PathVariable("id") Long id){
         Newsletter newsletter = newsletterService.findOneById(id);
