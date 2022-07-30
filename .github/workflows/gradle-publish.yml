@@ -39,3 +39,13 @@ jobs:
           docker build -t $REPO .
           docker tag $REPO:latest $NAME/$REPO:latest
           docker push $NAME/$REPO:latest
+
+  deploy:
+    needs: build
+    name: Deploy
+    runs-on: [ self-hosted, label-development ]
+    steps:
+      - name: Docker run
+        run: |
+          sudo docker ps -q --filter "name=weato" | grep -q . && sudo docker stop "weato" && sudo docker rmi  "jihoon806/weato"
+          sudo docker run -d --name weato --rm -p 8080:8080 jihoon806/weato
