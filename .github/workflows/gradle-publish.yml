@@ -32,10 +32,10 @@ jobs:
           password: ${{secrets.DOCKERHUB_TOKEN}}
 
       - name: build and release to DockerHub
-          env:
-            NAME: jihoon806 # 계정 명
-            REPO: weato # 레포 이름
-          run: |
-            docker build -t $REPO .
-            docker tag $REPO:latest $NAME/$REPO:latest
-            docker push $NAME/$REPO:latest
+        env:
+          NAME: jihoon806
+          REPO: weato
+        run: |
+          docker build -t $REPO .
+          docker tag $REPO:latest $NAME/$REPO:latest
+          docker push $NAME/$REPO:latest
