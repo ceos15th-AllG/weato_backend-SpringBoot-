@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ master ]
 
+  env:
+    S3_BUCKET_NAME: weato-deploy
+    PROJECT_NAME: weato
+
 jobs:
   build:
 
@@ -25,27 +29,42 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
+      - name: Make zip file
+        run: zip -r ./$GITHUB_SHA.zip .
+        shell: bash
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          username: ${{secrets.DOCKERHUB_USERNAME}}
-          password: ${{secrets.DOCKERHUB_TOKEN}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: build and release to DockerHub
-        env:
-          NAME: jihoon806
-          REPO: weato
-        run: |
-          docker build -t $REPO .
-          docker tag $REPO:latest $NAME/$REPO:latest
-          docker push $NAME/$REPO:latest
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
 
-  deploy:
-    needs: build
-    name: Deploy
-    runs-on: [ self-hosted, label-development ]
-    steps:
-      - name: Docker run
-        run: |
-          sudo docker ps -q --filter "name=weato" | grep -q . && sudo docker stop "weato" && sudo docker rmi  "jihoon806/weato"
-          sudo docker run -d --name weato --rm -p 8080:8080 jihoon806/weato
+
+#      - name: Login to DockerHub
+#        uses: docker/login-action@v1
+#        with:
+#          username: ${{secrets.DOCKERHUB_USERNAME}}
+#          password: ${{secrets.DOCKERHUB_TOKEN}}
+#
+#      - name: build and release to DockerHub
+#        env:
+#          NAME: jihoon806
+#          REPO: weato
+#        run: |
+#          docker build -t $REPO .
+#          docker tag $REPO:latest $NAME/$REPO:latest
+#          docker push $NAME/$REPO:latest
+
+#  deploy:
+#    needs: build
+#    name: Deploy
+#    runs-on: [ self-hosted, label-development ]
+#    steps:
+#      - name: Docker run
+#        run: |
+#          sudo docker ps -q --filter "name=weato" | grep -q . && sudo docker stop "weato" && sudo docker rmi  "jihoon806/weato"
+#          sudo docker run -d --name weato --rm -p 8080:8080 jihoon806/weato
