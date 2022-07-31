@@ -71,7 +71,7 @@ public class MemberController {
     public ProfileResponseDto showMemberProfile(@PathVariable("memberId") Long memberId){
 
         Member member = memberService.findById(memberId);
-        if(member.getProfile()==null || member.getAdditionalInfo()==null){
+        if(member.getProfile().getId()==null || member.getAdditionalInfo()==null){
             throw new RuntimeException("추가정보를 먼저 입력해주세요!");
         }
         return new ProfileResponseDto(member);
