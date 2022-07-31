@@ -6,9 +6,9 @@ on:
   pull_request:
     branches: [ master ]
 
-  env:
-    S3_BUCKET_NAME: weato-deploy
-    PROJECT_NAME: weato
+env:
+  S3_BUCKET_NAME: weato-deploy
+  PROJECT_NAME: weato
 
 jobs:
   build:
