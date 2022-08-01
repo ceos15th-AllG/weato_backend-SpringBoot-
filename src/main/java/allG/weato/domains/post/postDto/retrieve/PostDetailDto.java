@@ -32,6 +32,6 @@ public class PostDetailDto {
         this.views=post.getViews();
         this.comments = post.getCommentList().stream()
                 .map( c -> new CommentDto(c)).collect(Collectors.toList());
-        this.scrapCount=post.getScrapList().size();
+        this.scrapCount=post.getScrapCount();
     }
 }

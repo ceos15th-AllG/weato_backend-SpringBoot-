@@ -40,6 +40,10 @@ public class PostService {
         return postRepository.findPostById(id);
     }
 
+    public Post findPostFetchById(Long id){
+        return postRepository.findPostFecthJoin(id);
+    }
+
     public Post findPostByTitle(String title) {
         return postRepository.findPostByTitle(title);
     }

@@ -122,7 +122,8 @@ public class PostController {
     })
     @GetMapping("/posts/{id}")
     public PostDetailDto showPost(@PathVariable("id") Long id) {
-      Post post = postService.findPostById(id);
+//      Post post = postService.findPostById(id);
+      Post post = postService.findPostFetchById(id);
       if(post==null) throw new RestException(CommonErrorCode.RESOURCE_NOT_FOUND);
       post.addViews();
       postService.save(post);

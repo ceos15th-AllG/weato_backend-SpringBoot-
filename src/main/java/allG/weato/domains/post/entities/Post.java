@@ -29,8 +29,9 @@ public class Post {
 
     private String title;
     private String content;
-    private int likeCount ;
+    private int likeCount=0 ;
 
+    private int scrapCount=0;
     private int views=0;
     @ManyToOne(fetch = FetchType.LAZY) //멤버 - 게시글 외래키의 주인 > post
     @JoinColumn(name = "member_id")
@@ -52,7 +53,6 @@ public class Post {
 
 
     public int getLikeCount(){
-        likeCount=getPostLikeList().size();
         return likeCount;
     }
     public Post(String title, String content,BoardType boardType,LocalDateTime createAt){
@@ -111,6 +111,7 @@ public class Post {
     public void addScrap(Scrap scrap){
         scrapList.add(scrap);
         scrap.initPost(this);
+        scrapCount++;
     }
 
     public void deleteScrap(Scrap scrap){
