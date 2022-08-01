@@ -23,6 +23,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
       @EntityGraph(attributePaths = {"commentList"})
       Page<Post> findAll(Pageable pageable);
+
+      @EntityGraph(attributePaths = {"commentList"})
       Page<Post> findPostsByBoardType(Pageable pageable, BoardType boardType);
 
       @Modifying
