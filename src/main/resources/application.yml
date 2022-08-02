@@ -43,3 +43,7 @@ app:
 logging-module:
   version: 0.0.3
 
+server:
+  address: 127.0.0.1
+  port: 8081
+
