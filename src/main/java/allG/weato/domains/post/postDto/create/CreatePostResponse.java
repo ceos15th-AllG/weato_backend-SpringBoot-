@@ -3,6 +3,7 @@ package allG.weato.domains.post.postDto.create;
 import allG.weato.domains.post.entities.Post;
 import allG.weato.domains.enums.BoardType;
 import allG.weato.domains.post.postDto.AttachmentDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ public class CreatePostResponse {
     String Author;
     String title;
     String content;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     LocalDateTime createdAt;
     BoardType boardType;
     List<AttachmentDto> attachments = new ArrayList<>();
