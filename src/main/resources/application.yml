@@ -37,9 +37,10 @@ app:
     tokenExpiry: 180000
     refreshTokenExpiry: 604800000
   oauth2:
-    authorized-redirect-uris: http://3.37.94.86/
+    authorized-redirect-uris:
+      list: http://localhost:3000,http://weato.net,http://localhost:8080, http://http://3.37.94.86
 
 
 logging-module:
-  version: 0.0.8
+  version: 0.0.9
 
