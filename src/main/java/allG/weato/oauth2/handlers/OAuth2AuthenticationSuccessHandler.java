@@ -53,7 +53,7 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         Optional<String> redirectUri = CookieUtils.getCookie(request, HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
-//        System.out.println("redirectUri = " + redirectUri.get());
+        System.out.println("redirectUri = " + redirectUri.get());
         if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
             throw new BadRequestException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
         }
@@ -89,7 +89,7 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 
-    //application.properties에 등록해놓은 Redirect uri가 맞는지 확인한다. (app.redirect-uris)
+    //application.yml에 등록해놓은 Redirect uri가 맞는지 확인한다. (app.redirect-uris)
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
         System.out.println("clientRedirectUri = " + clientRedirectUri);
@@ -98,6 +98,7 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
                 .anyMatch(authorizedRedirectUri -> {
                     // Only validate host and port. Let the clients use different paths if they want to
                     URI authorizedURI = URI.create(authorizedRedirectUri);
+                    System.out.println("authorizedURI = " + authorizedURI);
                     if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
                             && authorizedURI.getPort() == clientRedirectUri.getPort()) {
                         return true;
