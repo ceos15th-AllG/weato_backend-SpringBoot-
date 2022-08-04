@@ -49,12 +49,12 @@ public class PostService {
     }
 
     public Page<Post> findPostWithPaging(Integer page){
-        PageRequest pageRequest = PageRequest.of(page,20, Sort.by(Sort.Direction.DESC,"createdAt"));
+        PageRequest pageRequest = PageRequest.of(page,6, Sort.by(Sort.Direction.DESC,"createdAt"));
         return postRepository.findAll(pageRequest);
     }
 
     public Page<Post> findPostPageWithBoardType(Integer page, BoardType boardType){
-        PageRequest pageRequest = PageRequest.of(page,20,Sort.by(Sort.Direction.DESC,"createdAt"));
+        PageRequest pageRequest = PageRequest.of(page,6,Sort.by(Sort.Direction.DESC,"createdAt"));
         return postRepository.findPostsByBoardType(pageRequest,boardType);
     }
 

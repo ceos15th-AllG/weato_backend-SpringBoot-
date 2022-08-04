@@ -39,6 +39,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +50,42 @@ public class PostController {
     private final MemberService memberService;
     private final PostService postService;
     private final HttpSession httpSession;
+
+    @Operation(summary = "retrieve data for community home", description = "게시글 생성")
+    @GetMapping("/community")
+    public ResultForCommunity retrieveCommunityHome(){
+        List<Post> posts = postService.findAll();
+
+        List<PostDto> hotTopics = posts.stream()
+                .sorted(Comparator.comparing(Post::getLikeCount).reversed())
+                .filter(p-> p.getLikeCount()>=10&& p.getCreatedAt().isAfter(LocalDateTime.now(ZoneId.of("Aisa/Seout")).minusDays(7)))
+                .map(p->new PostDto(p))
+                .limit(6)
+                .collect(Collectors.toList());
+
+        System.out.println("hotTopics.size() = " + hotTopics.size());
+        
+        List<PostDto> questionPosts = posts.stream()
+                .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
+                .filter(p ->p.getBoardType()==BoardType.QUESTION)
+                .map(p->new PostDto(p))
+                .limit(3)
+                .collect(Collectors.toList());
+
+        System.out.println("questionPosts.size() = " + questionPosts.size());
+        
+        List<PostDto> managementPosts = posts.stream()
+                .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
+                .filter(p->p.getBoardType()==BoardType.MANAGEMENT)
+                .map(p->new PostDto(p))
+                .limit(3)
+                .collect(Collectors.toList());
+
+        System.out.println("managementPosts.size() = " + managementPosts.size());
+
+        return new ResultForCommunity(hotTopics, questionPosts, managementPosts);
+
+    }
 
 
     @Operation(summary = "get all posts", description = "게시글 전체조회")
@@ -200,6 +237,7 @@ public class PostController {
         return HttpStatus.NO_CONTENT;
     }
 
+    @Operation(summary = "scrap post", description = "게시글 스크랩")
     @PostMapping("/posts/{postId}/scrap")
     public CreatePostScrapDto addScrap(@PathVariable("postId")Long postId){
         Post post = postService.findPostById(postId);
@@ -219,7 +257,7 @@ public class PostController {
 
         return new CreatePostScrapDto(post);
     }
-
+    @Operation(summary = "Delete Scrap", description = "게시글 스크랩 취소")
     @DeleteMapping("posts/{postId}/scrap")
     public HttpStatus deleteScrap(@PathVariable("postId") Long postId){
         Post post = postService.findPostById(postId);
@@ -245,6 +283,13 @@ public class PostController {
         private int min;
         private int max;
         private int current;
+    }
+    @Data
+    @AllArgsConstructor
+    static class ResultForCommunity<T>{
+        private T hotTopics;
+        private T question;
+        private T management;
     }
 }
 

@@ -44,12 +44,16 @@ public class Member {
 
     private LocalDateTime createAt;
 
+    private Boolean emailValidation=false;
+
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
     private String birthyear;
 
     private String gender;
+
+    private Integer authNum=(int)(Math.random()*5)+1;
 
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
@@ -235,6 +239,17 @@ public class Member {
         newsletterLike.initMember(null);
     }
 
+    public Integer getAuthNum() {
+        return authNum;
+    }
+
+    public void changeEmailValidation(){
+        emailValidation=!emailValidation;
+    }
+
+    public void changeAuthNum(int num) {
+        authNum=num;
+    }
 }
 
 

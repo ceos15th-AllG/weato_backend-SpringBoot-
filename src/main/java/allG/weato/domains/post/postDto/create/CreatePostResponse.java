@@ -4,6 +4,7 @@ import allG.weato.domains.post.entities.Post;
 import allG.weato.domains.enums.BoardType;
 import allG.weato.domains.post.postDto.AttachmentDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 
 import java.time.LocalDateTime;

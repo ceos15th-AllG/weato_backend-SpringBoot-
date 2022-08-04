@@ -1,7 +1,9 @@
 package allG.weato.domains.post.postDto.retrieve;
 
+import allG.weato.domains.enums.BoardType;
 import allG.weato.domains.post.entities.Post;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +23,8 @@ public class PostDto {
 
     private int likeCounter;
 
+    private BoardType boardType;
+
     public PostDto(Post post) {
         title = post.getTitle();
         createdAt = post.getCreatedAt();
@@ -28,5 +32,6 @@ public class PostDto {
         commentsCounter = post.getCommentList().size();
         views= post.getViews();
         likeCounter=post.getLikeCount();
+        boardType=post.getBoardType();
     }
 }
