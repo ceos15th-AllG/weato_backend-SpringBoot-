@@ -7,7 +7,7 @@ spring:
             client-id: QKR6g9QcGNlCUP7CUdTa
             client-secret: LQbKCSr0xm
             client-authentication-method: post
-            redirect-uri: http://localhost:3000/login/oauth2/code/naver
+            redirect-uri: http://3.37.94.86/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope: name, email, gender, birthyear
             client-name: Naver
