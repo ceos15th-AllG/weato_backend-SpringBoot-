@@ -96,9 +96,14 @@ public class MemberService {
 
 
     @Transactional
-    public void confirmEmailValidation(Member member) {
+    public void emailValidation(Member member) {
         member.changeEmailValidation();
-        int newNum = (int)(Math.random()*5)+1;
+        int newNum =  (int)(Math.random() * (99999 - 10000 + 1)) + 10000;
         member.changeAuthNum(newNum);
+    }
+
+    @Transactional
+    public void emailValidation(Member member, int num) {
+        member.changeAuthNum(num);
     }
 }

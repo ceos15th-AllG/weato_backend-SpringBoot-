@@ -53,7 +53,7 @@ public class Member {
 
     private String gender;
 
-    private Integer authNum=(int)(Math.random()*5)+1;
+    private Integer authNum;
 
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
@@ -244,7 +244,8 @@ public class Member {
     }
 
     public void changeEmailValidation(){
-        emailValidation=!emailValidation;
+        if(emailValidation==null||emailValidation==false) emailValidation=true;
+        else emailValidation=false;
     }
 
     public void changeAuthNum(int num) {

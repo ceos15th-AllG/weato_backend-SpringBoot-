@@ -1,18 +1,11 @@
 package allG.weato.domains.mail;
 
-import allG.weato.domains.mail.dto.MailDto;
+import allG.weato.domains.mail.dto.SendingMailDto;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.persistence.AssociationOverride;
 
 @Service
 @AllArgsConstructor
@@ -22,11 +15,17 @@ public class MailService {
 
     private static final String FROM_ADDRESS = "weato4u@gmail.com";
 
-    public void mailSend(MailDto mailDto){
+    public void mailSend(SendingMailDto sendingMailDto, int num){
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(mailDto.getAddress());
-        mailMessage.setSubject(mailDto.getTitle());
-        mailMessage.setText(mailDto.getMessage());
-        javaMailSender.send(mailMessage);
+        mailMessage.setFrom(FROM_ADDRESS);
+        mailMessage.setTo(sendingMailDto.getAddress());
+        mailMessage.setSubject("WEATO 서비스의 뉴스레터 이메일 주소 인증 번호.");
+        mailMessage.setText(Integer.toString(num));
+        try{
+            System.out.println("sending..");
+            javaMailSender.send(mailMessage);
+        }catch (MailException e){
+            System.out.println("e.getMessage() = " + e.getMessage());
+        }
     }
 }
