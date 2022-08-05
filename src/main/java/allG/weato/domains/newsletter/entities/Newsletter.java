@@ -22,10 +22,13 @@ public class Newsletter {
     private Long id;
 
     private String title; //뉴스레터 제목
+    @Column(columnDefinition="TEXT")
     private String content; //html 기반의 무언가..?....
     private LocalDateTime createdAt; //작성일시
 
     private int likeCount = 0 ;
+
+    private int bookMarkCount=0;
 
     private int views=0;
 
@@ -54,6 +57,7 @@ public class Newsletter {
     public void addBookMark(BookMark bookMark) {
         bookMarkList.add(bookMark);
         bookMark.initNewsletter(this);
+        bookMarkCount++;
     }
 
 //    public void classifyByTag(Tag tag){
@@ -76,6 +80,7 @@ public class Newsletter {
     public void deleteBookMark(BookMark bookMark){
         bookMarkList.remove(bookMark);
         bookMark.initNewsletter(null);
+        bookMarkCount--;
     }
     public void addViews() {
         views++;
@@ -84,11 +89,13 @@ public class Newsletter {
     public void addNewsletterLike(NewsletterLike newsletterLike){
         newsletterLikeList.add(newsletterLike);
         newsletterLike.initNewsletter(this);
+        likeCount++;
     }
 
-    public void deleteNewsletter(NewsletterLike newsletterLike){
+    public void deleteNewsletterLike(NewsletterLike newsletterLike){
         newsletterLikeList.remove(newsletterLike);
         newsletterLike.initNewsletter(null);
+        likeCount--;
     }
 
 }

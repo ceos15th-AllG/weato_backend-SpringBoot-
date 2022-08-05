@@ -11,6 +11,7 @@ import allG.weato.domains.newsletter.newsletterDto.CreateNewsletterDto;
 import allG.weato.domains.newsletter.newsletterDto.NewsletterResponseDto;
 import allG.weato.domains.newsletter.newsletterDto.NewsletterUpdateRequestDto;
 import allG.weato.domains.newsletter.newsletterDto.NewsletterUpdateResponseDto;
+import allG.weato.domains.newsletter.newsletterDto.retrieve.NewsletterRetrieveDto;
 import allG.weato.dto.AddLikeDto;
 import allG.weato.oauth2.JwtMemberDetails;
 import allG.weato.validation.CommonErrorCode;
@@ -67,11 +68,11 @@ public class NewsletterController {
 
     @Operation(summary = "get specific newsletter", description = "뉴스레터 단건조회")
     @GetMapping("/newsletters/{id}") //단건 조회
-    public NewsletterResponseDto findNewsletter(@PathVariable("id") Long id){
+    public NewsletterRetrieveDto findNewsletter(@PathVariable("id") Long id){
         Newsletter findOne = newsletterService.findOneById(id);
         findOne.addViews();
         newsletterService.save(findOne);
-        return new NewsletterResponseDto(findOne);
+        return new NewsletterRetrieveDto(findOne);
 
     }
 

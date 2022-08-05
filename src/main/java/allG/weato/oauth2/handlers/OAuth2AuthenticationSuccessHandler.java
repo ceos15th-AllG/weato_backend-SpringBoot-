@@ -57,6 +57,7 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
             throw new BadRequestException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
         }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+        System.out.println("targetUrl = " + targetUrl);
         String accessToken = jwtTokenUtil.generateToken(authentication.getName());
 
         long refreshExpiry = appProperties.getAuth().getRefreshTokenExpiry();
