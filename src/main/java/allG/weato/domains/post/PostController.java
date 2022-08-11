@@ -49,9 +49,8 @@ import java.util.stream.Collectors;
 public class PostController {
     private final MemberService memberService;
     private final PostService postService;
-    private final HttpSession httpSession;
 
-    @Operation(summary = "retrieve data for community home", description = "게시글 생성")
+    @Operation(summary = "retrieve data for community home", description = "커뮤니티 홈")
     @GetMapping("/community")
     public ResultForCommunity retrieveCommunityHome(){
         List<Post> posts = postService.findAll();

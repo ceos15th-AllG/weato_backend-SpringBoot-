@@ -11,6 +11,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface NewsletterRepository  extends JpaRepository<Newsletter,Long> {
 
 
@@ -18,6 +20,9 @@ public interface NewsletterRepository  extends JpaRepository<Newsletter,Long> {
 
     Page<Newsletter> findAll(Pageable pageable);
 
+    Page<Newsletter> findByTitleContaining(String keyword, Pageable pageable);
+
+    Page<Newsletter> findByContentContaining(String keyword, Pageable pageable);
 
     @Modifying
     @Transactional

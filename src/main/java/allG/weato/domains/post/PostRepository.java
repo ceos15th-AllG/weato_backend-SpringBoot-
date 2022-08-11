@@ -21,6 +21,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
       Post findPostByTitle(String title);
 
+      Page<Post> findByContentContaining(String keyword, Pageable pageable);
+
+      Page<Post> findByTitleContaining(String keyword, Pageable pageable);
+
       @EntityGraph(attributePaths = {"commentList"})
       Page<Post> findAll(Pageable pageable);
 

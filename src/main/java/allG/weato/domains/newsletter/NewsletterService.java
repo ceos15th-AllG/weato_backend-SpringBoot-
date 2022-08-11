@@ -38,14 +38,24 @@ public class NewsletterService {
 
     public Page<Newsletter> findPage(Integer num){
         PageRequest pageRequest = PageRequest.of(num,8,Sort.by(Sort.Direction.DESC,"createdAt"));
-        Page<Newsletter> result = newsletterRepository.findAll(pageRequest);
-        return result;
+        return newsletterRepository.findAll(pageRequest);
+
     }
 
     public Page<Newsletter> findPageByTag(TagType tagType, Integer num){
         PageRequest pageRequest = PageRequest.of(num,8, Sort.by(Sort.Direction.DESC,"createdAt"));
-        Page<Newsletter> pages = newsletterRepository.findNewslettersByTagType(tagType,pageRequest);
-        return pages;
+        return  newsletterRepository.findNewslettersByTagType(tagType,pageRequest);
+
+    }
+
+    public Page<Newsletter> searchPostsWithKeywordInContent(Integer num, String keyword){
+        PageRequest pageRequest = PageRequest.of(num,8,Sort.by(Sort.Direction.DESC,"createAt"));
+        return newsletterRepository.findByContentContaining(keyword,pageRequest);
+    }
+
+    public Page<Newsletter> searchPostsWithKeywordInTitle(Integer num, String keyword){
+        PageRequest pageRequest = PageRequest.of(num,8,Sort.by(Sort.Direction.DESC,"createdAt"));
+        return newsletterRepository.findByTitleContaining(keyword,pageRequest);
     }
 
     @Transactional

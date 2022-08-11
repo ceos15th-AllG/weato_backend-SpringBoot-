@@ -58,6 +58,15 @@ public class PostService {
         return postRepository.findPostsByBoardType(pageRequest,boardType);
     }
 
+    public Page<Post> searchPostsWithKeywordInContent(Integer page, String keyword){
+        PageRequest pageRequest = PageRequest.of(page,6,Sort.by(Sort.Direction.DESC,"createdAt"));
+        return postRepository.findByContentContaining(keyword,pageRequest);
+    }
+
+    public Page<Post> searchPostWithKeywordInTitle(Integer page, String keyword){
+        PageRequest pageRequest = PageRequest.of(page,6,Sort.by(Sort.Direction.DESC,"createAt"));
+        return postRepository.findByTitleContaining(keyword,pageRequest);
+    }
 
     @Transactional
     public void updatePostContent(Post post, String content) {
