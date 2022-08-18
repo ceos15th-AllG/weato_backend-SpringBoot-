@@ -20,9 +20,8 @@ public interface NewsletterRepository  extends JpaRepository<Newsletter,Long> {
 
     Page<Newsletter> findAll(Pageable pageable);
 
-    Page<Newsletter> findByTitleContaining(String keyword, Pageable pageable);
+    Page<Newsletter> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(String title,String content, Pageable pageable);
 
-    Page<Newsletter> findByContentContaining(String keyword, Pageable pageable);
 
     @Modifying
     @Transactional

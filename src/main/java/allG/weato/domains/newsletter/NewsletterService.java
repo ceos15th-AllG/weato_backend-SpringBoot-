@@ -48,14 +48,10 @@ public class NewsletterService {
 
     }
 
-    public Page<Newsletter> searchPostsWithKeywordInContent(Integer num, String keyword){
-        PageRequest pageRequest = PageRequest.of(num,8,Sort.by(Sort.Direction.DESC,"createAt"));
-        return newsletterRepository.findByContentContaining(keyword,pageRequest);
-    }
+    public Page<Newsletter> searchNewslettersWithKeyword(Integer page, String keyword){
+        PageRequest pageRequest = PageRequest.of(page,8,Sort.by(Sort.Direction.DESC,"createdAt"));
 
-    public Page<Newsletter> searchPostsWithKeywordInTitle(Integer num, String keyword){
-        PageRequest pageRequest = PageRequest.of(num,8,Sort.by(Sort.Direction.DESC,"createdAt"));
-        return newsletterRepository.findByTitleContaining(keyword,pageRequest);
+        return newsletterRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(keyword,keyword,pageRequest);
     }
 
     @Transactional
