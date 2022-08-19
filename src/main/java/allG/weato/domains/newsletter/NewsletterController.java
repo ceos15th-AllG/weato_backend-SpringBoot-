@@ -80,7 +80,6 @@ public class NewsletterController {
     @PostMapping("/newsletters")
     public NewsletterResponseDto postNewsletter(@RequestBody @Valid CreateNewsletterDto request){
         Newsletter newsletter = new Newsletter(request.getTitle(),request.getContent(),request.getTagType());
-        Long id = newsletter.getId();
         newsletterService.save(newsletter);
         /*Newsletter findOne = newsletterService.findOneById(id); //이거 약간 테스트처럼 드가는데???
         if(findOne==null) throw new RestException(CommonErrorCode.INTERNAL_SERVER_ERROR);

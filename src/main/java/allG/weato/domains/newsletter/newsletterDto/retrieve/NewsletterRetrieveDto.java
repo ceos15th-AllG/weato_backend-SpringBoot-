@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,7 +20,7 @@ public class NewsletterRetrieveDto {
 
     private int views;
 
-    private String content;
+    private List<String> content;
 
     private int likeCount;
 

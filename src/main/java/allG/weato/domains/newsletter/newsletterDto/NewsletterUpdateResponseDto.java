@@ -7,12 +7,13 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 public class NewsletterUpdateResponseDto {
     private String title;
-    private String content;
+    private List<String> content;
     private TagType tagType;
     private LocalDateTime createdAt;
     private int likeCount=0;
