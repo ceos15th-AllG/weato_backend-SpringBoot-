@@ -28,9 +28,10 @@ public class Post {
     private LocalDateTime createdAt;
 
     private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
     private int likeCount=0 ;
-
     private int scrapCount=0;
     private int views=0;
     @ManyToOne(fetch = FetchType.LAZY) //멤버 - 게시글 외래키의 주인 > post
