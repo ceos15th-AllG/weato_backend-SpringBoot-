@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class NewsletterUpdateResponseDto {
     private String title;
-    private List<String> content;
+    private String content;
     private TagType tagType;
     private LocalDateTime createdAt;
     private int likeCount=0;

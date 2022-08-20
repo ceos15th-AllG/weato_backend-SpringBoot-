@@ -11,6 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class NewsletterUpdateRequestDto {
     private String updatedTitle;
-    private List<String> updatedContent;
+    private String updatedContent;
     private LocalDateTime updatedAt=LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 }

@@ -22,12 +22,9 @@ public class Newsletter {
     private Long id;
 
     private String title; //뉴스레터 제목
-//    @Column(columnDefinition="TEXT")
-//    private String content; //html 기반의 무언가..?....
 
-    @ElementCollection
     @Column(columnDefinition = "TEXT")
-    private List<String> content=new ArrayList<>();
+    private String content;
     private LocalDateTime createdAt; //작성일시
 
     private int likeCount = 0 ;
@@ -47,7 +44,7 @@ public class Newsletter {
     private List<NewsletterLike> newsletterLikeList=new ArrayList<>();
 
 
-    public Newsletter(String title, List<String> content, TagType tagType){
+    public Newsletter(String title, String content, TagType tagType){
         this.title=title;
         this.content=content;
         this.tagType=tagType;
@@ -73,7 +70,7 @@ public class Newsletter {
         this.title=title;
     }
 
-    public void changeContent(List<String> content){
+    public void changeContent(String content){
         this.content=content;
     }
 

@@ -20,7 +20,7 @@ public class NewsletterRetrieveDto {
 
     private int views;
 
-    private List<String> content;
+    private String content;
 
     private int likeCount;
 

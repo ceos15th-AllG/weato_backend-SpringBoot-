@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CreateNewsletterDto {
     String title;
-    List<String> content;
+    String content;
     TagType tagType;
 }
 
