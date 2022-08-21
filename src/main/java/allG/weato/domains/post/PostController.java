@@ -275,6 +275,24 @@ public class PostController {
         return HttpStatus.NO_CONTENT;
 
     }
+
+    @GetMapping("/posts/search")
+    public ResultForPaging searchPostsByKeyword(@RequestParam(value = "keyword") String keyword,
+                                                @RequestParam(value="page",defaultValue = "1") Integer page){
+        Page<Post> searchedPosts = postService.searchPostsWithKeyword(page-1,keyword);
+        List<Post> posts = searchedPosts.getContent();
+        int lastPageNum = searchedPosts.getTotalPages();
+        int current = page;
+        int min = 1+current/10*10;
+        int max =10+current/10*10;
+        if(max>=lastPageNum) max = lastPageNum;
+        List<PostDto> result = posts.stream()
+                .map(p -> new PostDto(p))
+                .collect(Collectors.toList());
+
+        return new ResultForPaging(result,min,max,current);
+
+    }
     @Data
     @AllArgsConstructor
     static class ResultForPaging<T>{

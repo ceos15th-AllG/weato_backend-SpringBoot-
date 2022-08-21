@@ -185,6 +185,26 @@ public class NewsletterController {
         return HttpStatus.NO_CONTENT;
     }
 
+    @GetMapping("/newsletters/search")
+    public ResultForPaging searchNewslettersByKeyword(
+            @RequestParam(value = "keyword") String keyword,
+            @RequestParam(value = "page",defaultValue = "1") Integer page
+    ){
+        Page<Newsletter> searchedNewsletters = newsletterService.searchNewslettersWithKeyword(page-1,keyword);
+        List<Newsletter> newsletters = searchedNewsletters.getContent();
+
+        if(newsletters.isEmpty()) throw new RestException(CommonErrorCode.RESOURCE_NOT_FOUND);
+
+        int lastPage = searchedNewsletters.getTotalPages();
+        int current = page;
+        int min = 1+current/10*10;
+        int max =10+current/10*10;
+        if(max>=lastPage) max = lastPage;
+        List<NewsletterResponseDto> result = newsletters
+                .stream()
+                .map(n -> new NewsletterResponseDto(n)).collect(toList());
+        return new ResultForPaging(result,min,max,current);
+    }
 
     @Data
     @AllArgsConstructor
