@@ -45,7 +45,13 @@ public class NaverOAuth2MemberInfo extends OAuth2MemberInfo {
 
     @Override
     public String getImageUrl() {
-        return null;
+        Map<String,Object> response = (Map<String, Object>) attributes.get("response");
+
+        if(response==null){
+            return null;
+        }
+
+        return (String) response.get("imageUrl");
     }
 
     @Override

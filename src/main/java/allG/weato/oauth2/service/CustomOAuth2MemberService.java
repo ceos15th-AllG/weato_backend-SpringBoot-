@@ -60,7 +60,7 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
                                 " account. Please use your " + savedMember.getProviderType() + " account to login."
                 );
             }
-//            updateMember(savedMember, memberInfo);
+            updateMember(savedMember, memberInfo);
         } else {
             savedMember = createMember(memberInfo, providerType);
         }
@@ -76,6 +76,7 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
                 memberInfo.getName(), memberInfo.getEmail(), memberInfo.getGender(), memberInfo.getBirthyear(), Role.USER,providerType
         );
         Profile profile = new Profile();
+        profile.changeImgurl(memberInfo.getImageUrl());
         member.addProfile(profile);
         return memberRepository.save(member);
     }
