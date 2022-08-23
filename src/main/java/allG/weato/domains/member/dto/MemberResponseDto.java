@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class MemberResponseDto {
+    private Long id;
     private String name;
     private String email;
     private String gender;
@@ -14,6 +15,7 @@ public class MemberResponseDto {
     private LocalDateTime createdAT;
 
     public MemberResponseDto(Member member) {
+        id = member.getId();
         name = member.getName();
         email=member.getEmail();
         gender= member.getGender();
