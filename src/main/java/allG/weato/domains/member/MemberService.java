@@ -63,6 +63,16 @@ public class MemberService {
 
     }
 
+    public boolean validateAboutNickname(String nickname){
+        Member member = memberRepository.findByNickname(nickname).get();
+        if(member==null){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
     @Transactional
     public void addComment(Member member, Comment comment) {
         member.addComment(comment);

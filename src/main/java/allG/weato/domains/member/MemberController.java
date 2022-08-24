@@ -56,6 +56,15 @@ public class MemberController {
         return new CreateMemberResponse(member);
     }
 
+    @GetMapping("/members/nickname/validation")
+    public boolean validationCheckForNickname(String nickname){
+        return memberService.validateAboutNickname(nickname);
+    }
+
+
+
+
+
 
 
     @Operation(summary = "Retrieve specific member", description = "특정 멤버 조회")
