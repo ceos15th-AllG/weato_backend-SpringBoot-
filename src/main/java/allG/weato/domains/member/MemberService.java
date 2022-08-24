@@ -24,11 +24,14 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
 
-    @EntityGraph(attributePaths = {"profile"})
+
     public Member findById(Long id){
       return memberRepository.findById(id).get();
     }
 
+    public Member findMemberForProfile(Long id){
+        return memberRepository.findMemberById(id);
+    }
     public Member findByEmail(String email){
       Optional<Member> member  = memberRepository.findByEmail(email);
       Member findMember = member.get();
@@ -41,7 +44,7 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public Member getMember(String userId){
+    public Member getMember(String userId){ //이메일 말하는거임
         return memberRepository.findByUserId(userId);
     }
 

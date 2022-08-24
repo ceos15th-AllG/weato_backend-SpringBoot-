@@ -2,6 +2,7 @@ package allG.weato.domains.member;
 
 import allG.weato.domains.member.entities.Member;
 import allG.weato.domains.enums.ProviderType;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,6 +13,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> { //타입
 
     Optional<Member> findByEmail(String Email);
     Member findMemberByEmail(String Email);
+
+    @EntityGraph(attributePaths = {"profile","additional-info","bookMarkList"})
+    Member findMemberById(Long id);
+
 
     Member findByUserId(String userId);
 

@@ -73,7 +73,7 @@ public class MemberController {
     @GetMapping("/members/{memberId}/profile")//프로필
     public ProfileResponseDto showMemberProfile(@PathVariable("memberId") Long memberId){
 
-        Member member = memberService.findById(memberId);
+        Member member = memberService.findMemberForProfile(memberId);
         if(member.getProfile().getId()==null || member.getAdditionalInfo()==null){
             throw new RuntimeException("추가정보를 먼저 입력해주세요!");
         }
@@ -118,7 +118,7 @@ public class MemberController {
             ,@PathVariable("memberId") Long memberId){
         code=code.toUpperCase();
         TagType tagType = TagType.valueOf(code);
-        Member member = memberService.findById(memberId);
+        Member member = memberService.findMemberForProfile(memberId);
         if(tagType==tagType.ALL) return new BookmarkResponseDto(member);
         else return new BookmarkResponseDto(member,tagType);
     }
