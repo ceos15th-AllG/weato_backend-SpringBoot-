@@ -3,10 +3,12 @@
 #!/bin/bash
 
 # Crawl current connected port of WAS
-CURRENT_PORT=$(cat /home/ec2-user/service_url.inc | grep -Po '[0-9]+' | tail -1)
+CURRENT_PORT=$(cat /home/ec2-user/service_url.inc  | grep -Po '[0-9]+' | tail -1)
 TARGET_PORT=0
 
-# Toggle port Number
+echo "> Nginx currently proxies to ${CURRENT_PORT}."
+
+# Toggle port number
 if [ ${CURRENT_PORT} -eq 8081 ]; then
     TARGET_PORT=8082
 elif [ ${CURRENT_PORT} -eq 8082 ]; then
@@ -16,13 +18,12 @@ else
     exit 1
 fi
 
-
 # Change proxying port into target port
- echo "set \$service_url http://127.0.0.1:${TARGET_PORT};" | tee /home/ec2-user/service_url.inc
+echo "set \$service_url http://127.0.0.1:${TARGET_PORT};" | tee /home/ec2-user/service_url.inc
 
- echo "> Now Nginx proxies to ${TARGET_PORT}."
+echo "> Now Nginx proxies to ${TARGET_PORT}."
 
- # Reload nginx
- sudo service nginx reload
+# Reload nginx
+sudo service nginx reload
 
- echo "> Nginx reloaded."
+echo "> Nginx reloaded."
