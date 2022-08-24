@@ -56,8 +56,8 @@ public class MemberController {
         return new CreateMemberResponse(member);
     }
 
-    @GetMapping("/members/nickname/validation")
-    public boolean validationCheckForNickname(String nickname){
+    @GetMapping("/members/validation")
+    public boolean validationCheckForNickname(@RequestParam("nickname") String nickname){
         return memberService.validateAboutNickname(nickname);
     }
 
