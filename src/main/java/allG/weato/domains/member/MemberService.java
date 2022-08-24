@@ -64,7 +64,7 @@ public class MemberService {
     }
 
     public boolean validateAboutNickname(String nickname){
-        Member member = memberRepository.findByNickname(nickname).get();
+        Member member = memberRepository.findMemberByNickname(nickname);
         if(member==null){
             return false;
         }

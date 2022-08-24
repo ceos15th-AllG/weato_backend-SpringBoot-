@@ -15,7 +15,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> { //타입
 
     Member findByUserId(String userId);
 
-    Optional<Member> findByNickname(String nickname);
+    Member findMemberByNickname(String nickname);
 
 //    @Query(name = "select m from Member m")
 //    List<Member> findAllByEmail();
