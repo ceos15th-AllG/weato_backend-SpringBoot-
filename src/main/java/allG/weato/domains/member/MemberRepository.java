@@ -15,7 +15,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> { //타입
     Optional<Member> findByEmail(String Email);
     Member findMemberByEmail(String Email);
 
-    @EntityGraph(attributePaths = {"profile","additional-info","bookMarkList"})
+    @EntityGraph(attributePaths = {"profile","additionalInfo","bookMarkList"})
     Member findMemberById(Long id);
 
     Member findByUserId(String userId);
