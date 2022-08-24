@@ -99,4 +99,15 @@ public class NaverOAuth2MemberInfo extends OAuth2MemberInfo {
 
         return (String) response.get("birthyear");
     }
+
+    @Override
+    public String getBirthday(){
+        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+
+        if (response == null) {
+            return null;
+        }
+
+        return (String) response.get("birthday");
+    }
 }

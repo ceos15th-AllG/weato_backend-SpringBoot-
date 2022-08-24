@@ -73,7 +73,7 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
     private Member createMember(OAuth2MemberInfo memberInfo, ProviderType providerType){
 
         Member member = new Member(
-                memberInfo.getName(), memberInfo.getEmail(), memberInfo.getGender(), memberInfo.getBirthyear(), Role.USER,providerType
+                memberInfo.getName(), memberInfo.getEmail(), memberInfo.getGender(), memberInfo.getBirthyear(),memberInfo.getBirthday(), Role.USER,providerType
         );
         Profile profile = new Profile();
         profile.changeImgurl(memberInfo.getImageUrl());

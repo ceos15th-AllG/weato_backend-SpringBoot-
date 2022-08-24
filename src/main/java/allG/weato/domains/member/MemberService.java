@@ -8,6 +8,7 @@ import allG.weato.domains.member.entities.BookMark;
 import allG.weato.domains.member.entities.Member;
 import allG.weato.domains.newsletter.entities.Newsletter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
 
+    @EntityGraph(attributePaths = {"profile"})
     public Member findById(Long id){
       return memberRepository.findById(id).get();
     }

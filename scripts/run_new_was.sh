@@ -1,3 +1,4 @@
+# run_new_was.sh
 
 #!/bin/bash
 
@@ -21,6 +22,6 @@ if [ ! -z ${TARGET_PID} ]; then
   sudo kill -9 ${TARGET_PID}
 fi
 
-nohup java -jar -Dserver.port=${TARGET_PORT} /home/ec2-user/weato-logging/build/libs/* > /home/ubuntu/nohup.out 2>&1 &
+sudo nohup java -jar -Dserver.port=${TARGET_PORT} /home/ec2-user/weato-logging/build/libs/* > /home/ubuntu/nohup.out 2>&1 &
 echo "> Now new WAS runs at ${TARGET_PORT}."
 exit 0

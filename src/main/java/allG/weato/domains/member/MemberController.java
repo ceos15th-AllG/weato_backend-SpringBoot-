@@ -61,12 +61,6 @@ public class MemberController {
         return memberService.validateAboutNickname(nickname);
     }
 
-
-
-
-
-
-
     @Operation(summary = "Retrieve specific member", description = "특정 멤버 조회")
     @GetMapping("/members/{memberId}")// my-page
     public MemberResponseDto showMember(@PathVariable("memberId") Long memberId){

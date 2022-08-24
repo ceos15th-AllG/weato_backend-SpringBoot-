@@ -31,4 +31,6 @@ public abstract class OAuth2MemberInfo {
     public abstract String getGender();
 
     public abstract String getBirthyear();
+
+    public abstract String getBirthday();
 }

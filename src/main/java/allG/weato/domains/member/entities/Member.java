@@ -51,6 +51,8 @@ public class Member {
 
     private String birthyear;
 
+    private String birthday;
+
     private String gender;
 
     private Integer authNum;
@@ -109,12 +111,13 @@ public class Member {
 
     //Constructor with Args
     @Builder
-    public Member(String name, String email,String gender,String birthyear, Role role,ProviderType providerType){
+    public Member(String name, String email,String gender,String birthyear, String birthday, Role role,ProviderType providerType){
         this.name=name;
         this.email=email;
         this.role=role;
         this.gender=gender;
         this.birthyear=birthyear;
+        this.birthday=birthday;
         this.providerType=providerType;
         this.createAt=LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         this.additional_info_checker=false;
