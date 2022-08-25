@@ -3,6 +3,7 @@ package allG.weato.oauth2.service;
 import allG.weato.domains.enums.ProviderType;
 import allG.weato.domains.enums.Role;
 import allG.weato.domains.member.MemberRepository;
+import allG.weato.domains.member.entities.AdditionalInfo;
 import allG.weato.domains.member.entities.Member;
 import allG.weato.domains.member.entities.Profile;
 import allG.weato.oauth2.JwtMemberDetails;
@@ -78,6 +79,8 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
         Profile profile = new Profile();
         profile.changeImgurl(memberInfo.getImageUrl());
         member.addProfile(profile);
+        AdditionalInfo additionalInfo= new AdditionalInfo();
+        member.setAdditional_info(additionalInfo);
         return memberRepository.save(member);
     }
 

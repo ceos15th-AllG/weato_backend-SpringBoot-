@@ -75,7 +75,7 @@ public class MemberController {
 
         Member member = memberService.findMemberForProfile(memberId);
         if(member.getProfile().getId()==null || member.getAdditionalInfo()==null){
-            throw new RuntimeException("추가정보를 먼저 입력해주세요!");
+            throw new RuntimeException("추가정보 혹은 프로필을 먼저 입력해주세요!");
         }
         return new ProfileResponseDto(member);
     }
