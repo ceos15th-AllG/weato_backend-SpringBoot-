@@ -36,6 +36,15 @@ public class NewsletterService {
             return findNewsletter.get();
         }
     }
+    public Newsletter findOneByIdWithLikes(Long id){
+        return newsletterRepository.findNewsletterByIdWithLikes(id);
+    }
+
+    public Newsletter findOneByIdWithBookMarks(Long id){
+        return newsletterRepository.findNewsletterByIdWithBookMaks(id);
+    }
+
+
 
     public Page<Newsletter> findPage(Integer num){
         PageRequest pageRequest = PageRequest.of(num,8,Sort.by(Sort.Direction.DESC,"createdAt"));
@@ -111,7 +120,7 @@ public class NewsletterService {
     @Transactional
     public void deleteNewsletterLike(Member findMember, Newsletter newsletter, NewsletterLike newsletterLike) {
         findMember.deleteNewsletterLike(newsletterLike);
-        newsletter.addNewsletterLike(newsletterLike);
+        newsletter.deleteNewsletterLike(newsletterLike);
         newsletterRepository.deleteNewsletterLike(newsletterLike.getId());
     }
 

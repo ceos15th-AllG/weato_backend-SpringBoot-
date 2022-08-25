@@ -125,5 +125,12 @@ public class PostService {
         PageRequest pageRequest = PageRequest.of(0,10);
         return postRepository.sortPostsByLikeCount(std,pageRequest).getContent();
     }
+
+    public Post findOneByIdWithLikes(Long id){
+        return postRepository.findPostByIdWithLikes(id);
+    }
+    public Post findOneByIdWithScrap(Long id){
+        return postRepository.findPostByIdWithScrap(id);
+    }
 }
 

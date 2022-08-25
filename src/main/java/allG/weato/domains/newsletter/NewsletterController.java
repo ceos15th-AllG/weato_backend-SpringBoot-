@@ -110,7 +110,7 @@ public class NewsletterController {
         String email = principal.getUsername();
         Member findMember = memberService.findByEmail(email);
 
-        Newsletter newsletter = newsletterService.findOneById(id);
+        Newsletter newsletter = newsletterService.findOneByIdWithBookMarks(id);
 
         BookMark bookMark = new BookMark();
 
@@ -132,7 +132,7 @@ public class NewsletterController {
         String email = principal.getUsername();
         Member findMember = memberService.findByEmail(email);
 
-        Newsletter newsletter = newsletterService.findOneById(id);
+        Newsletter newsletter = newsletterService.findOneByIdWithBookMarks(id);
 
         List<BookMark> bookMarks = newsletter.getBookMarkList();
         for (BookMark bookMark : bookMarks) {
@@ -147,36 +147,37 @@ public class NewsletterController {
     @Operation(summary = "likes to newsletter", description = "뉴스레터 좋아요")
     @PostMapping("/newsletters/{id}/likes")
     public AddLikeDto addNewsletterLike(@PathVariable("id")Long id){
-        Newsletter newsletter = newsletterService.findOneById(id);
 
+        Newsletter newsletter = newsletterService.findOneByIdWithLikes(id);
         JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = principal.getUsername();
         Member findMember = memberService.findByEmail(email);
 
-        List<NewsletterLike> newsletterLikeList = newsletter.getNewsletterLikeList();
-        for (NewsletterLike newsletterLike : newsletterLikeList) {
+        if(findMember==null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        for (NewsletterLike newsletterLike : newsletter.getNewsletterLikeList()) {
             if(newsletterLike.getMember().getId()==findMember.getId()){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"You already scraped it");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"You already liked it");
             }
         }
 
         NewsletterLike newsletterLike = new NewsletterLike();
         newsletterService.addNewsletterLike(findMember,newsletter,newsletterLike);
 
-        return new AddLikeDto(newsletter.getId(),newsletter.getNewsletterLikeList().size());
+        return new AddLikeDto(newsletter.getId(),newsletter.getLikeCount());
     }
 
-    @Operation(summary = "delete likes to comment", description = "댓글 좋아요 삭제")
+    @Operation(summary = "delete likes to comment", description = "뉴스레터 좋아요 삭제")
     @DeleteMapping("/newsletters/{id}/likes")
     public HttpStatus deleteNewsletterLike(@PathVariable("id") Long id){
-        Newsletter newsletter = newsletterService.findOneById(id);
+
+        Newsletter newsletter = newsletterService.findOneByIdWithLikes(id);
 
         JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = principal.getUsername();
         Member findMember = memberService.findByEmail(email);
 
-        List<NewsletterLike> newsletterLikeList = newsletter.getNewsletterLikeList();
-        for (NewsletterLike newsletterLike : newsletterLikeList) {
+        for (NewsletterLike newsletterLike : newsletter.getNewsletterLikeList()) {
             if(newsletterLike.getMember().getId()==findMember.getId()){
                 newsletterService.deleteNewsletterLike(findMember,newsletter,newsletterLike);
                 break;

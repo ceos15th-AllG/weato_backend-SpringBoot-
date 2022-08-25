@@ -202,18 +202,21 @@ public class PostController {
     @PostMapping("/posts/{postId}/likes")
     public AddLikeDto likeToPost(@PathVariable("postId") Long id){
 
-        Post post = postService.findPostById(id);
+        Post post = postService.findOneByIdWithLikes(id);
         JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = principal.getUsername();
         Member findMember = memberService.findByEmail(email);
+
         if(findMember==null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        PostLike postLike = new PostLike();
+
         List<PostLike> postLikeList = post.getPostLikeList();
         for (PostLike like : postLikeList) {
             if(like.getMember().getId()==findMember.getId()){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"You already liked it");
             }
         }
+
+        PostLike postLike = new PostLike();
         postService.addLike(findMember,post,postLike);
         return new AddLikeDto(post.getId(),post.getLikeCount());
     }
@@ -222,10 +225,12 @@ public class PostController {
     @DeleteMapping("/posts/{postId}/likes")
     public HttpStatus deleteLike(@PathVariable("postId")Long id){
 
-        Post findPost = postService.findPostById(id);
+        Post findPost = postService.findOneByIdWithLikes(id);
+
         JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = principal.getUsername();
         Member findMember = memberService.findByEmail(email);
+
         for (PostLike like : findPost.getPostLikeList()) {
             if(like.getMember().getId()==findMember.getId()){
                 postService.deleteLike(findMember,findPost,like);
@@ -238,7 +243,7 @@ public class PostController {
     @Operation(summary = "scrap post", description = "게시글 스크랩")
     @PostMapping("/posts/{postId}/scrap")
     public CreatePostScrapDto addScrap(@PathVariable("postId")Long postId){
-        Post post = postService.findPostById(postId);
+        Post post = postService.findOneByIdWithScrap(postId);
 
         JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email =  principal.getUsername();
@@ -258,7 +263,7 @@ public class PostController {
     @Operation(summary = "Delete Scrap", description = "게시글 스크랩 취소")
     @DeleteMapping("posts/{postId}/scrap")
     public HttpStatus deleteScrap(@PathVariable("postId") Long postId){
-        Post post = postService.findPostById(postId);
+        Post post = postService.findOneByIdWithScrap(postId);
 
 
         JwtMemberDetails principal = (JwtMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
