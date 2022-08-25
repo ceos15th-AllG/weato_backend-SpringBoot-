@@ -24,10 +24,10 @@ public interface NewsletterRepository  extends JpaRepository<Newsletter,Long> {
 
     Page<Newsletter> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(String title,String content, Pageable pageable);
 
-    @Query("select n from Newsletter n join fetch n.newsletterLikeList where n.id = :id")
+    @Query("select n from Newsletter n left join fetch n.newsletterLikeList where n.id = :id")
     Newsletter findNewsletterByIdWithLikes(@Param("id")Long id);
 
-    @Query("select n from Newsletter n join fetch n.bookMarkList where n.id = :id")
+    @Query("select n from Newsletter n left join fetch n.bookMarkList where n.id = :id")
     Newsletter findNewsletterByIdWithBookMaks(@Param("id")Long id);
     @Modifying
     @Transactional

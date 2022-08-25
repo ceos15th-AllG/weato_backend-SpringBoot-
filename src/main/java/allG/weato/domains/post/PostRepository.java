@@ -22,10 +22,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
       @Query("select p from Post p left join fetch p.commentList left join fetch p.member where p.id = :id")
       Post findPostFecthJoin(@Param("id") Long id);
 
-      @Query("select p from Post p join fetch p.postLikeList where p.id = :id")
+      @Query("select p from Post p left join fetch p.postLikeList where p.id = :id")
       Post findPostByIdWithLikes(@Param("id")Long id);
 
-      @Query("select p from Post p join fetch p.scrapList where p.id = :id")
+      @Query("select p from Post p left join fetch p.scrapList where p.id = :id")
       Post findPostByIdWithScrap(@Param("id")Long id);
 
       Post findPostByTitle(String title);
