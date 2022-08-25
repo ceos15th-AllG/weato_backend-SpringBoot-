@@ -61,7 +61,6 @@ public class PostController {
                 .limit(6)
                 .collect(Collectors.toList());
 
-        System.out.println("hotTopics.size() = " + hotTopics.size());
         
         List<PostRetrieveDto> questionPosts = posts.stream()
                 .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
@@ -79,7 +78,6 @@ public class PostController {
                 .limit(3)
                 .collect(Collectors.toList());
 
-        System.out.println("managementPosts.size() = " + managementPosts.size());
 
         return new ResultForCommunity(hotTopics, questionPosts, managementPosts);
 
@@ -144,8 +142,7 @@ public class PostController {
             post.addAttachments(attachment);
         }
         postService.save(post);
-        CreatePostResponse response = new CreatePostResponse(post);
-        return response;
+        return new CreatePostResponse(post);
     }
 
     @Operation(summary = "get specific post", description = "게시글 단건조회")
@@ -157,21 +154,21 @@ public class PostController {
     })
     @GetMapping("/posts/{id}")
     public PostDetailRetrieveDto showPost(@PathVariable("id") Long id) {
-//      Post post = postService.findPostById(id);
+
       Post post = postService.findPostFetchById(id);
       if(post==null) throw new RestException(CommonErrorCode.RESOURCE_NOT_FOUND);
       post.addViews();
       postService.save(post);
-      PostDetailRetrieveDto postDetailRetrieveDto = new PostDetailRetrieveDto(post);
 
-      return postDetailRetrieveDto;
+      return new PostDetailRetrieveDto(post);
     }
 
 
     @Operation(summary = "update post", description = "게시글 수정")
     @PatchMapping("/posts/{id}")
     public UpdatePostResponse updatePost(@PathVariable("id") Long id, @RequestBody @Valid UpdatePostRequest request){
-       Post post = postService.findPostById(id);
+
+        Post post = postService.findPostById(id);
        if(post==null) throw new RestException(CommonErrorCode.RESOURCE_NOT_FOUND);
         if(request.getTitle()!=null&&request.getContent()==null){
            postService.updatePostTitle(post, request.getTitle());

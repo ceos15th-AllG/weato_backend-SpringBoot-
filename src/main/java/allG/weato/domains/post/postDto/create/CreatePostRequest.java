@@ -1,6 +1,7 @@
 package allG.weato.domains.post.postDto.create;
 
 import allG.weato.domains.enums.BoardType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ public class CreatePostRequest {
     @NotEmpty
     String content;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     LocalDateTime createAt;
 
     BoardType boardType;

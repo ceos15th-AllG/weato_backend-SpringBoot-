@@ -11,9 +11,12 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 public class PostRetrieveDto {
+    private Long id;
+
     private String title;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
+
     private String author;
 
     private int commentsCounter;
@@ -25,6 +28,7 @@ public class PostRetrieveDto {
     private BoardType boardType;
 
     public PostRetrieveDto(Post post) {
+        id= post.getId();
         title = post.getTitle();
         createdAt = post.getCreatedAt();
         author = post.getMember().getName();
