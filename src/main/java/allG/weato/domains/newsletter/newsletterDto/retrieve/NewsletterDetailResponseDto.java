@@ -8,12 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class NewsletterRetrieveDto {
+public class NewsletterDetailResponseDto {
 
     private String title;
     private TagType tagType;
@@ -29,7 +28,7 @@ public class NewsletterRetrieveDto {
 
     private int bookmarkCount;
 
-    public NewsletterRetrieveDto(Newsletter newsletter){
+    public NewsletterDetailResponseDto(Newsletter newsletter){
         title= newsletter.getTitle();
         tagType=newsletter.getTagType();
         views=newsletter.getViews();

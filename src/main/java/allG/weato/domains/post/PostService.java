@@ -13,6 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Transactional(readOnly = true)
@@ -116,6 +118,11 @@ public class PostService {
         member.deleteScrap(scrap);
         post.deleteScrap(scrap);
         postRepository.deleteScrapById(scrap.getId());
+    }
+
+    public List<Post> retrieveHotTopicsOfThisWeek(){
+        LocalDateTime std = LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusDays(7);
+        return postRepository.sortPostsByLikeCount(std);
     }
 }
 

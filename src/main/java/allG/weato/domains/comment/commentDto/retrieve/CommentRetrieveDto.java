@@ -1,4 +1,4 @@
-package allG.weato.domains.comment.commentDto;
+package allG.weato.domains.comment.commentDto.retrieve;
 
 import allG.weato.domains.comment.entities.Comment;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-public class CommentDto {
+public class CommentRetrieveDto {
     private String author;
     private String content;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
@@ -17,7 +17,7 @@ public class CommentDto {
 
     private int likeCounter;
 
-    public CommentDto(Comment comment){
+    public CommentRetrieveDto(Comment comment){
         author=comment.getMember().getName();
         content=comment.getContent();
         createdAt=comment.getCreatedAt();

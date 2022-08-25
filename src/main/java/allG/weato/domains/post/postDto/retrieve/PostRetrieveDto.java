@@ -3,7 +3,6 @@ package allG.weato.domains.post.postDto.retrieve;
 import allG.weato.domains.enums.BoardType;
 import allG.weato.domains.post.entities.Post;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-public class PostDto {
+public class PostRetrieveDto {
     private String title;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
@@ -25,7 +24,7 @@ public class PostDto {
 
     private BoardType boardType;
 
-    public PostDto(Post post) {
+    public PostRetrieveDto(Post post) {
         title = post.getTitle();
         createdAt = post.getCreatedAt();
         author = post.getMember().getName();

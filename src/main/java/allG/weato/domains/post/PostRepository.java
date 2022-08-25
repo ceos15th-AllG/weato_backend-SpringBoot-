@@ -11,6 +11,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public interface PostRepository extends JpaRepository<Post, Long> {
 
 
@@ -38,6 +41,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
       @Transactional
       @Query("delete from Scrap s where s.id = :scrapId")
       void deleteScrapById(@Param("scrapId")Long scrapId);
+
+      @Query(nativeQuery = true,value = "select p from Post p where p.createdAt >= :now order by p.likeCount DESC limit 10")
+      List<Post> sortPostsByLikeCount(@Param("now")LocalDateTime now);
 
 //    @Query("delete from Comment c where c.id = :commentId")
 //    void deleteCommentById(@Param("commentId") Long commentId);

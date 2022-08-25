@@ -7,11 +7,11 @@ import allG.weato.domains.newsletter.entities.NewsletterLike;
 import allG.weato.domains.newsletter.newsletterDto.BookmarkResponseDto;
 import allG.weato.domains.newsletter.entities.Newsletter;
 import allG.weato.domains.enums.TagType;
-import allG.weato.domains.newsletter.newsletterDto.CreateNewsletterDto;
-import allG.weato.domains.newsletter.newsletterDto.NewsletterResponseDto;
-import allG.weato.domains.newsletter.newsletterDto.NewsletterUpdateRequestDto;
-import allG.weato.domains.newsletter.newsletterDto.NewsletterUpdateResponseDto;
-import allG.weato.domains.newsletter.newsletterDto.retrieve.NewsletterRetrieveDto;
+import allG.weato.domains.newsletter.newsletterDto.create.CreateNewsletterDto;
+import allG.weato.domains.newsletter.newsletterDto.retrieve.NewsletterResponseDto;
+import allG.weato.domains.newsletter.newsletterDto.update.NewsletterUpdateRequestDto;
+import allG.weato.domains.newsletter.newsletterDto.update.NewsletterUpdateResponseDto;
+import allG.weato.domains.newsletter.newsletterDto.retrieve.NewsletterDetailResponseDto;
 import allG.weato.dto.AddLikeDto;
 import allG.weato.oauth2.JwtMemberDetails;
 import allG.weato.validation.CommonErrorCode;
@@ -68,11 +68,11 @@ public class NewsletterController {
 
     @Operation(summary = "get specific newsletter", description = "뉴스레터 단건조회")
     @GetMapping("/newsletters/{id}") //단건 조회
-    public NewsletterRetrieveDto findNewsletter(@PathVariable("id") Long id){
+    public NewsletterDetailResponseDto findNewsletter(@PathVariable("id") Long id){
         Newsletter findOne = newsletterService.findOneById(id);
         findOne.addViews();
         newsletterService.save(findOne);
-        return new NewsletterRetrieveDto(findOne);
+        return new NewsletterDetailResponseDto(findOne);
 
     }
 
@@ -206,6 +206,16 @@ public class NewsletterController {
         return new ResultForPaging(result,min,max,current);
     }
 
+    @GetMapping("/newsletters/hot-topics")
+    public ResultForList getHotTopics(){
+
+        List<Newsletter> newsletters = newsletterService.retrieveHotTopicsOfThisWeek();
+        List<NewsletterResponseDto> result = newsletters.stream()
+                .map(n -> new NewsletterResponseDto(n)).collect(toList());
+
+        return new ResultForList(result);
+    }
+
     @Data
     @AllArgsConstructor
     static class ResultForPaging<T>{
@@ -213,5 +223,11 @@ public class NewsletterController {
         private int min;
         private int max;
         private int current;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class ResultForList<T>{
+        private T data;
     }
 }

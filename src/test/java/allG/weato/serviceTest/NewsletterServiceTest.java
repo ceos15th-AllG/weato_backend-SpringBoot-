@@ -1,7 +1,7 @@
 package allG.weato.serviceTest;
 
 import allG.weato.domains.newsletter.entities.Newsletter;
-import allG.weato.domains.newsletter.newsletterDto.NewsletterUpdateRequestDto;
+import allG.weato.domains.newsletter.newsletterDto.update.NewsletterUpdateRequestDto;
 import allG.weato.domains.newsletter.NewsletterRepository;
 import allG.weato.domains.newsletter.NewsletterService;
 import org.junit.jupiter.api.DisplayName;

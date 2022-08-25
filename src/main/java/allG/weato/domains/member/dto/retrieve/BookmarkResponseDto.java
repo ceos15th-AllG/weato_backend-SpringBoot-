@@ -2,14 +2,11 @@ package allG.weato.domains.member.dto.retrieve;
 
 import allG.weato.domains.enums.TagType;
 import allG.weato.domains.member.entities.Member;
-import allG.weato.domains.newsletter.entities.Newsletter;
-import allG.weato.domains.newsletter.newsletterDto.NewsletterResponseDto;
+import allG.weato.domains.newsletter.newsletterDto.retrieve.NewsletterResponseDto;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Data
 public class BookmarkResponseDto {

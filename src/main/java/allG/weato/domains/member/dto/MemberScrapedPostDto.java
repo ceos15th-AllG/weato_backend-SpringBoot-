@@ -2,7 +2,7 @@ package allG.weato.domains.member.dto;
 
 import allG.weato.domains.enums.BoardType;
 import allG.weato.domains.member.entities.Member;
-import allG.weato.domains.post.postDto.retrieve.PostDto;
+import allG.weato.domains.post.postDto.retrieve.PostRetrieveDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class MemberScrapedPostDto {
     private int count;
-    private List<PostDto> scrapedPosts;
+    private List<PostRetrieveDto> scrapedPosts;
 
     public MemberScrapedPostDto(Member member){
 
         scrapedPosts=member.getScrapList()
                 .stream()
-                .map(scrap -> new PostDto(scrap.getPost()))
+                .map(scrap -> new PostRetrieveDto(scrap.getPost()))
                 .collect(Collectors.toList());
 
         count = scrapedPosts.size();
@@ -28,7 +28,7 @@ public class MemberScrapedPostDto {
         scrapedPosts=member.getScrapList()
                 .stream()
                 .filter(scrap -> scrap.getPost().getBoardType()==boardType)
-                .map(scrap -> new PostDto(scrap.getPost()))
+                .map(scrap -> new PostRetrieveDto(scrap.getPost()))
                 .collect(Collectors.toList());
 
         count=scrapedPosts.size();

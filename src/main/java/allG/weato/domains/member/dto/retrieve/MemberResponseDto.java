@@ -1,4 +1,4 @@
-package allG.weato.domains.member.dto;
+package allG.weato.domains.member.dto.retrieve;
 
 import allG.weato.domains.member.entities.Member;
 import lombok.Data;

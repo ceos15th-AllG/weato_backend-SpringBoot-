@@ -1,4 +1,4 @@
-package allG.weato.domains.newsletter.newsletterDto;
+package allG.weato.domains.newsletter.newsletterDto.update;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

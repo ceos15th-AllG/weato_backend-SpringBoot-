@@ -10,8 +10,8 @@ import allG.weato.domains.post.postDto.create.CreatePostScrapDto;
 import allG.weato.dto.AddLikeDto;
 import allG.weato.domains.post.postDto.create.CreatePostRequest;
 import allG.weato.domains.post.postDto.create.CreatePostResponse;
-import allG.weato.domains.post.postDto.retrieve.PostDetailDto;
-import allG.weato.domains.post.postDto.retrieve.PostDto;
+import allG.weato.domains.post.postDto.retrieve.PostDetailRetrieveDto;
+import allG.weato.domains.post.postDto.retrieve.PostRetrieveDto;
 import allG.weato.dto.error.Error400;
 import allG.weato.dto.error.Error404;
 import allG.weato.dto.error.Error500;
@@ -35,7 +35,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -55,28 +54,28 @@ public class PostController {
     public ResultForCommunity retrieveCommunityHome(){
         List<Post> posts = postService.findAll();
 
-        List<PostDto> hotTopics = posts.stream()
+        List<PostRetrieveDto> hotTopics = posts.stream()
                 .sorted(Comparator.comparing(Post::getLikeCount).reversed())
                 .filter(p-> p.getLikeCount()>=10&& p.getCreatedAt().isAfter(LocalDateTime.now(ZoneId.of("Aisa/Seout")).minusDays(7)))
-                .map(p->new PostDto(p))
+                .map(p->new PostRetrieveDto(p))
                 .limit(6)
                 .collect(Collectors.toList());
 
         System.out.println("hotTopics.size() = " + hotTopics.size());
         
-        List<PostDto> questionPosts = posts.stream()
+        List<PostRetrieveDto> questionPosts = posts.stream()
                 .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
                 .filter(p ->p.getBoardType()==BoardType.QUESTION)
-                .map(p->new PostDto(p))
+                .map(p->new PostRetrieveDto(p))
                 .limit(3)
                 .collect(Collectors.toList());
 
         System.out.println("questionPosts.size() = " + questionPosts.size());
         
-        List<PostDto> managementPosts = posts.stream()
+        List<PostRetrieveDto> managementPosts = posts.stream()
                 .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
                 .filter(p->p.getBoardType()==BoardType.MANAGEMENT)
-                .map(p->new PostDto(p))
+                .map(p->new PostRetrieveDto(p))
                 .limit(3)
                 .collect(Collectors.toList());
 
@@ -89,7 +88,7 @@ public class PostController {
 
     @Operation(summary = "get all posts", description = "게시글 전체조회")
     @ApiResponses({
-            @ApiResponse(responseCode = "200",description = "Ok", content = @Content(schema = @Schema(implementation = PostDto.class))),
+            @ApiResponse(responseCode = "200",description = "Ok", content = @Content(schema = @Schema(implementation = PostRetrieveDto.class))),
             @ApiResponse(responseCode = "400",description = "BAD REQUEST", content = @Content(schema = @Schema(implementation =Error400.class ))),
             @ApiResponse(responseCode = "404",description = "NOT FOUND", content = @Content(schema = @Schema(implementation =Error404.class ))),
             @ApiResponse(responseCode = "500",description = "INTERNAL SERVER ERROR", content = @Content(schema = @Schema(implementation =Error500.class )))
@@ -116,8 +115,8 @@ public class PostController {
         int min = 1+current/10*10;
         int max =10+current/10*10;
         if(max>=lastPageNum) max = lastPageNum;
-        List<PostDto> result = posts.stream()
-                .map(p -> new PostDto(p))
+        List<PostRetrieveDto> result = posts.stream()
+                .map(p -> new PostRetrieveDto(p))
                 .collect(Collectors.toList());
 
         return new ResultForPaging(result, min, max, current);
@@ -157,15 +156,15 @@ public class PostController {
             @ApiResponse(responseCode = "500",description = "INTERNAL SERVER ERROR")
     })
     @GetMapping("/posts/{id}")
-    public PostDetailDto showPost(@PathVariable("id") Long id) {
+    public PostDetailRetrieveDto showPost(@PathVariable("id") Long id) {
 //      Post post = postService.findPostById(id);
       Post post = postService.findPostFetchById(id);
       if(post==null) throw new RestException(CommonErrorCode.RESOURCE_NOT_FOUND);
       post.addViews();
       postService.save(post);
-      PostDetailDto postDetailDto = new PostDetailDto(post);
+      PostDetailRetrieveDto postDetailRetrieveDto = new PostDetailRetrieveDto(post);
 
-      return postDetailDto;
+      return postDetailRetrieveDto;
     }
 
 
@@ -286,12 +285,22 @@ public class PostController {
         int min = 1+current/10*10;
         int max =10+current/10*10;
         if(max>=lastPageNum) max = lastPageNum;
-        List<PostDto> result = posts.stream()
-                .map(p -> new PostDto(p))
+        List<PostRetrieveDto> result = posts.stream()
+                .map(p -> new PostRetrieveDto(p))
                 .collect(Collectors.toList());
 
         return new ResultForPaging(result,min,max,current);
 
+    }
+
+    @GetMapping("/posts/hot-topics")
+    public ResultForList getHotTopics(){
+
+        List<Post> posts = postService.retrieveHotTopicsOfThisWeek();
+        List<PostRetrieveDto> result = posts.stream()
+                .map(p->new PostRetrieveDto(p)).collect(Collectors.toList());
+
+        return new ResultForList(result);
     }
     @Data
     @AllArgsConstructor
@@ -300,6 +309,14 @@ public class PostController {
         private int min;
         private int max;
         private int current;
+    }
+
+
+    @Data
+    @AllArgsConstructor
+    static class ResultForList<T>
+    {
+        private T data;
     }
     @Data
     @AllArgsConstructor

@@ -3,31 +3,24 @@ package allG.weato.domains.member;
 
 import allG.weato.domains.enums.BoardType;
 import allG.weato.domains.enums.TagType;
-import allG.weato.domains.member.MemberService;
 import allG.weato.domains.member.dto.*;
 import allG.weato.domains.member.dto.create.CreateMemberRequest;
 import allG.weato.domains.member.dto.create.CreateMemberResponse;
 import allG.weato.domains.member.dto.retrieve.BookmarkResponseDto;
+import allG.weato.domains.member.dto.retrieve.MemberResponseDto;
+import allG.weato.domains.member.dto.retrieve.ProfileResponseDto;
 import allG.weato.domains.member.dto.update.UpdateProfileRequestDto;
 import allG.weato.domains.member.dto.update.UpdateProfileResponseDto;
 import allG.weato.domains.member.entities.AdditionalInfo;
-import allG.weato.domains.member.entities.BookMark;
 import allG.weato.domains.member.entities.Member;
-import allG.weato.dto.error.Error404;
 import allG.weato.oauth2.JwtMemberDetails;
-import allG.weato.oauth2.response.ApiResponse;
 import allG.weato.validation.CommonErrorCode;
-import allG.weato.validation.ErrorCode;
 import allG.weato.validation.RestException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.validation.Valid;
 
 @RestController

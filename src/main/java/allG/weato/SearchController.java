@@ -1,12 +1,11 @@
 package allG.weato;
 
-import allG.weato.domains.newsletter.NewsletterRepository;
 import allG.weato.domains.newsletter.NewsletterService;
 import allG.weato.domains.newsletter.entities.Newsletter;
-import allG.weato.domains.newsletter.newsletterDto.retrieve.NewsletterRetrieveDto;
+import allG.weato.domains.newsletter.newsletterDto.retrieve.NewsletterDetailResponseDto;
 import allG.weato.domains.post.PostService;
 import allG.weato.domains.post.entities.Post;
-import allG.weato.domains.post.postDto.retrieve.PostDto;
+import allG.weato.domains.post.postDto.retrieve.PostRetrieveDto;
 import lombok.*;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,15 +33,15 @@ public class SearchController {
         Page<Post> searchedPosts = postService.searchPostsWithKeyword(0,keyword);
         List<Post> posts = searchedPosts.getContent();
 
-        List<NewsletterRetrieveDto> newsletterDtos = newsletters
+        List<NewsletterDetailResponseDto> newsletterDtos = newsletters
                 .stream()
-                .map(n -> new NewsletterRetrieveDto(n)).collect(Collectors.toList());
+                .map(n -> new NewsletterDetailResponseDto(n)).collect(Collectors.toList());
 
-        List<PostDto> postDtos = posts
+        List<PostRetrieveDto> postRetrieveDtos = posts
                 .stream()
-                .map(p -> new PostDto(p)).collect(Collectors.toList());
+                .map(p -> new PostRetrieveDto(p)).collect(Collectors.toList());
 
-        return new SearchRequestDto(newsletterDtos,postDtos);
+        return new SearchRequestDto(newsletterDtos, postRetrieveDtos);
     }
 
 

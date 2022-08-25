@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface NewsletterRepository  extends JpaRepository<Newsletter,Long> {
@@ -32,4 +33,7 @@ public interface NewsletterRepository  extends JpaRepository<Newsletter,Long> {
     @Transactional
     @Query("delete from NewsletterLike nl where nl.id = :newsletterLikeId")
     void deleteNewsletterLike(@Param("newsletterLikeId")Long newsletterLikeId);
+
+    @Query(nativeQuery = true, value="select nl from Newsletter nl where nl.createdAt >= :now order by nl.likeCount desc limit 10")
+    List<Newsletter> sortNewsletterByLikeCount(@Param("now")LocalDateTime now);
 }

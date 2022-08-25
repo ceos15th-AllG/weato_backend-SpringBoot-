@@ -5,7 +5,7 @@ import allG.weato.domains.member.entities.Member;
 import allG.weato.domains.newsletter.entities.Newsletter;
 import allG.weato.domains.enums.TagType;
 import allG.weato.domains.newsletter.entities.NewsletterLike;
-import allG.weato.domains.newsletter.newsletterDto.NewsletterUpdateRequestDto;
+import allG.weato.domains.newsletter.newsletterDto.update.NewsletterUpdateRequestDto;
 import allG.weato.validation.CommonErrorCode;
 import allG.weato.validation.RestException;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -112,5 +113,10 @@ public class NewsletterService {
         findMember.deleteNewsletterLike(newsletterLike);
         newsletter.addNewsletterLike(newsletterLike);
         newsletterRepository.deleteNewsletterLike(newsletterLike.getId());
+    }
+
+    public List<Newsletter> retrieveHotTopicsOfThisWeek(){
+        LocalDateTime standard = LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusDays(7);
+        return newsletterRepository.sortNewsletterByLikeCount(standard);
     }
 }
