@@ -25,7 +25,7 @@ public class NewsletterResponseDto {
         tagType=newsletter.getTagType();
         createdAt=newsletter.getCreatedAt();
         views=newsletter.getViews();
-        likeCount= newsletter.getNewsletterLikeList().size();
-        bookmarkCount=newsletter.getBookMarkList().size();
+        likeCount= newsletter.getLikeCount();
+        bookmarkCount=newsletter.getBookMarkCount();
     }
 }
