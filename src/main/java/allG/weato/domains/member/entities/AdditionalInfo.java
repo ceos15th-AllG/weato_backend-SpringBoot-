@@ -50,7 +50,7 @@ public class AdditionalInfo {
         if(request.getSteroid()) managementTypes.add(ManagementType.STEROID);
         if(request.getDiet()) managementTypes.add(ManagementType.DIET);
         if(request.getDrug()) managementTypes.add(ManagementType.DRUG);
-        if(request.getCleaning()) managementTypes.add(ManagementType.CLEANING);
+        if(request.getMoisturizer()) managementTypes.add(ManagementType.MOISTURE);
         if(request.getOintment()) managementTypes.add(ManagementType.OINTMENT);
         if(request.getLaser()) managementTypes.add(ManagementType.LASER);
         if(request.getOrientalMedicine()) managementTypes.add(ManagementType.ORIENTALMEDICINE);
@@ -63,7 +63,7 @@ public class AdditionalInfo {
         if(request.getSteroid()) managementTypes.add(ManagementType.STEROID);
         if(request.getDiet()) managementTypes.add(ManagementType.DIET);
         if(request.getDrug()) managementTypes.add(ManagementType.DRUG);
-        if(request.getCleaning()) managementTypes.add(ManagementType.CLEANING);
+        if(request.getMoisturizer()) managementTypes.add(ManagementType.MOISTURE);
         if(request.getOintment()) managementTypes.add(ManagementType.OINTMENT);
         if(request.getLaser()) managementTypes.add(ManagementType.LASER);
         if(request.getOrientalMedicine()) managementTypes.add(ManagementType.ORIENTALMEDICINE);

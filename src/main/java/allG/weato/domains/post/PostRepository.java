@@ -42,7 +42,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
       @Query("delete from Scrap s where s.id = :scrapId")
       void deleteScrapById(@Param("scrapId")Long scrapId);
 
-      @Query(nativeQuery = true,value = "select p from Post p where p.createdAt >= :now order by p.likeCount DESC limit 10")
+      @Query(nativeQuery = true,value = "select p from post p where p.createdAt >= :now order by p.likeCount DESC limit 10")
       List<Post> sortPostsByLikeCount(@Param("now")LocalDateTime now);
 
 //    @Query("delete from Comment c where c.id = :commentId")
