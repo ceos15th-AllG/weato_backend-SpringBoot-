@@ -122,7 +122,8 @@ public class PostService {
 
     public List<Post> retrieveHotTopicsOfThisWeek(){
         LocalDateTime std = LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusDays(7);
-        return postRepository.sortPostsByLikeCount(std);
+        PageRequest pageRequest = PageRequest.of(0,10);
+        return postRepository.sortPostsByLikeCount(std,pageRequest).getContent();
     }
 }
 

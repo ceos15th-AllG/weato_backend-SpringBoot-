@@ -34,6 +34,6 @@ public interface NewsletterRepository  extends JpaRepository<Newsletter,Long> {
     @Query("delete from NewsletterLike nl where nl.id = :newsletterLikeId")
     void deleteNewsletterLike(@Param("newsletterLikeId")Long newsletterLikeId);
 
-    @Query(nativeQuery = true, value="select nl from newsletter nl where nl.createdAt >= :now order by nl.likeCount desc limit 10")
-    List<Newsletter> sortNewsletterByLikeCount(@Param("now")LocalDateTime now);
+    @Query ("select nl from Newsletter nl where nl.createdAt >= :now order by nl.likeCount desc")
+    Page<Newsletter> sortNewsletterByLikeCount(@Param("now")LocalDateTime now,Pageable pageable);
 }

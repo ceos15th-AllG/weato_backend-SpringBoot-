@@ -117,6 +117,7 @@ public class NewsletterService {
 
     public List<Newsletter> retrieveHotTopicsOfThisWeek(){
         LocalDateTime standard = LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusDays(7);
-        return newsletterRepository.sortNewsletterByLikeCount(standard);
+        PageRequest pageRequest = PageRequest.of(0,10);
+        return newsletterRepository.sortNewsletterByLikeCount(standard,pageRequest).getContent();
     }
 }
