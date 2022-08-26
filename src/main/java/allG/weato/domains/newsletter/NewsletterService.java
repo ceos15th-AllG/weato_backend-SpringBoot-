@@ -125,8 +125,14 @@ public class NewsletterService {
     }
 
     public List<Newsletter> retrieveHotTopicsOfThisWeek(){
-        LocalDateTime standard = LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusDays(7);
+        LocalDateTime std = LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusDays(7);
         PageRequest pageRequest = PageRequest.of(0,10);
-        return newsletterRepository.sortNewsletterByLikeCount(standard,pageRequest).getContent();
+        return newsletterRepository.sortNewsletterByLikeCount(std,pageRequest).getContent();
+    }
+
+    public List<Newsletter> retrieveMostBookMarked(){
+        LocalDateTime std = LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusDays(7);
+        PageRequest pageRequest = PageRequest.of(0,10);
+        return newsletterRepository.sortNewsletterByBookMarkCount(std,pageRequest).getContent();
     }
 }

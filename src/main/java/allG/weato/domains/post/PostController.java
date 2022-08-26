@@ -298,7 +298,17 @@ public class PostController {
     @GetMapping("/posts/hot-topics")
     public ResultForList getHotTopics(){
 
-        List<Post> posts = postService.retrieveHotTopicsOfThisWeek();
+        List<Post> posts = postService.retrieveHotTopicsOfWeek();
+        List<PostRetrieveDto> result = posts.stream()
+                .map(p->new PostRetrieveDto(p)).collect(Collectors.toList());
+
+        return new ResultForList(result);
+    }
+
+    @GetMapping("/posts/most-scraped")
+    public ResultForList getMostScraped(){
+
+        List<Post> posts = postService.retrieveMostScrapedOfWeek();
         List<PostRetrieveDto> result = posts.stream()
                 .map(p->new PostRetrieveDto(p)).collect(Collectors.toList());
 

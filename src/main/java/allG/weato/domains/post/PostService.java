@@ -120,10 +120,16 @@ public class PostService {
         postRepository.deleteScrapById(scrap.getId());
     }
 
-    public List<Post> retrieveHotTopicsOfThisWeek(){
+    public List<Post> retrieveHotTopicsOfWeek(){
         LocalDateTime std = LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusDays(7);
         PageRequest pageRequest = PageRequest.of(0,10);
         return postRepository.sortPostsByLikeCount(std,pageRequest).getContent();
+    }
+
+    public List<Post> retrieveMostScrapedOfWeek(){
+        LocalDateTime std = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        PageRequest pageRequest = PageRequest.of(0,10);
+        return postRepository.sortPostByScrapCount(std,pageRequest).getContent();
     }
 
     public Post findOneByIdWithLikes(Long id){

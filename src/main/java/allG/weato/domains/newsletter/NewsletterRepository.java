@@ -41,4 +41,7 @@ public interface NewsletterRepository  extends JpaRepository<Newsletter,Long> {
 
     @Query ("select nl from Newsletter nl where nl.createdAt >= :now order by nl.likeCount desc")
     Page<Newsletter> sortNewsletterByLikeCount(@Param("now")LocalDateTime now,Pageable pageable);
+
+    @Query("select nl from Newsletter nl where nl.createdAt >= :now order by nl.bookMarkCount desc")
+    Page<Newsletter> sortNewsletterByBookMarkCount(@Param("now")LocalDateTime now, Pageable pageable);
 }

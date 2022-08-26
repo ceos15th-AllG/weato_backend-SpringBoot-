@@ -217,6 +217,16 @@ public class NewsletterController {
         return new ResultForList(result);
     }
 
+    @GetMapping("/newsletters/most-bookmarked")
+    public ResultForList getMostBookMakred(){
+
+        List<Newsletter> newsletters = newsletterService.retrieveMostBookMarked();
+        List<NewsletterResponseDto> result = newsletters.stream()
+                .map(n -> new NewsletterResponseDto(n)).collect(toList());
+
+        return new ResultForList(result);
+    }
+
     @Data
     @AllArgsConstructor
     static class ResultForPaging<T>{
