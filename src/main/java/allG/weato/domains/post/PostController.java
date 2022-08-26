@@ -56,7 +56,7 @@ public class PostController {
 
         List<PostRetrieveDto> hotTopics = posts.stream()
                 .sorted(Comparator.comparing(Post::getLikeCount).reversed())
-                .filter(p-> p.getLikeCount()>=10&& p.getCreatedAt().isAfter(LocalDateTime.now(ZoneId.of("Aisa/Seout")).minusDays(7)))
+                .filter(p-> p.getLikeCount()>=1&& p.getCreatedAt().isAfter(LocalDateTime.now(ZoneId.of("Aisa/Seout")).minusDays(7)))
                 .map(p->new PostRetrieveDto(p))
                 .limit(6)
                 .collect(Collectors.toList());
