@@ -28,9 +28,11 @@ public class SearchController {
     public SearchRequestDto searchPostsAndNewsletters(
             @RequestParam(value = "keyword") String keyword){
         Page<Newsletter> searchedNewsletter = newsletterService.searchNewslettersWithKeyword(0,keyword);
+        Long numOfTotalNewsletters = searchedNewsletter.getTotalElements();
         List<Newsletter> newsletters = searchedNewsletter.getContent();
 
         Page<Post> searchedPosts = postService.searchPostsWithKeyword(0,keyword);
+        Long numOfTotalPosts = searchedPosts.getTotalElements();
         List<Post> posts = searchedPosts.getContent();
 
         List<NewsletterDetailResponseDto> newsletterDtos = newsletters
@@ -41,7 +43,7 @@ public class SearchController {
                 .stream()
                 .map(p -> new PostRetrieveDto(p)).collect(Collectors.toList());
 
-        return new SearchRequestDto(newsletterDtos, postRetrieveDtos);
+        return new SearchRequestDto(newsletterDtos, postRetrieveDtos,numOfTotalNewsletters,numOfTotalPosts);
     }
 
 
@@ -50,5 +52,8 @@ public class SearchController {
     public static class SearchRequestDto<T1,T2>{
         private T1 newslettersData;
         private T2 postsData;
+        private long numOfNewsletters;
+        private long numOfPosts;
+
     }
 }

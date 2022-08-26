@@ -13,6 +13,9 @@ import allG.weato.domains.newsletter.newsletterDto.update.NewsletterUpdateReques
 import allG.weato.domains.newsletter.newsletterDto.update.NewsletterUpdateResponseDto;
 import allG.weato.domains.newsletter.newsletterDto.retrieve.NewsletterDetailResponseDto;
 import allG.weato.dto.AddLikeDto;
+import allG.weato.dto.ResultForList;
+import allG.weato.dto.ResultForPaging;
+import allG.weato.dto.ResultForSearch;
 import allG.weato.oauth2.JwtMemberDetails;
 import allG.weato.validation.CommonErrorCode;
 import allG.weato.validation.RestException;
@@ -187,11 +190,12 @@ public class NewsletterController {
     }
 
     @GetMapping("/newsletters/search")
-    public ResultForPaging searchNewslettersByKeyword(
+    public ResultForSearch searchNewslettersByKeyword(
             @RequestParam(value = "keyword") String keyword,
             @RequestParam(value = "page",defaultValue = "1") Integer page
     ){
         Page<Newsletter> searchedNewsletters = newsletterService.searchNewslettersWithKeyword(page-1,keyword);
+        long numsOfTotalNewsletters = searchedNewsletters.getTotalElements();
         List<Newsletter> newsletters = searchedNewsletters.getContent();
 
         if(newsletters.isEmpty()) throw new RestException(CommonErrorCode.RESOURCE_NOT_FOUND);
@@ -204,7 +208,7 @@ public class NewsletterController {
         List<NewsletterResponseDto> result = newsletters
                 .stream()
                 .map(n -> new NewsletterResponseDto(n)).collect(toList());
-        return new ResultForPaging(result,min,max,current);
+        return new ResultForSearch(result,min,max,current,numsOfTotalNewsletters);
     }
 
     @GetMapping("/newsletters/hot-topics")
@@ -218,7 +222,7 @@ public class NewsletterController {
     }
 
     @GetMapping("/newsletters/most-bookmarked")
-    public ResultForList getMostBookMakred(){
+    public ResultForList getMostBookMarked(){
 
         List<Newsletter> newsletters = newsletterService.retrieveMostBookMarked();
         List<NewsletterResponseDto> result = newsletters.stream()
@@ -227,18 +231,4 @@ public class NewsletterController {
         return new ResultForList(result);
     }
 
-    @Data
-    @AllArgsConstructor
-    static class ResultForPaging<T>{
-        private T data;
-        private int min;
-        private int max;
-        private int current;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class ResultForList<T>{
-        private T data;
-    }
 }

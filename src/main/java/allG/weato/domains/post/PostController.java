@@ -7,7 +7,7 @@ import allG.weato.domains.post.entities.Post;
 import allG.weato.domains.post.entities.PostLike;
 import allG.weato.domains.post.entities.Scrap;
 import allG.weato.domains.post.postDto.create.CreatePostScrapDto;
-import allG.weato.dto.AddLikeDto;
+import allG.weato.dto.*;
 import allG.weato.domains.post.postDto.create.CreatePostRequest;
 import allG.weato.domains.post.postDto.create.CreatePostResponse;
 import allG.weato.domains.post.postDto.retrieve.PostDetailRetrieveDto;
@@ -278,9 +278,10 @@ public class PostController {
     }
 
     @GetMapping("/posts/search")
-    public ResultForPaging searchPostsByKeyword(@RequestParam(value = "keyword") String keyword,
+    public ResultForSearch searchPostsByKeyword(@RequestParam(value = "keyword") String keyword,
                                                 @RequestParam(value="page",defaultValue = "1") Integer page){
         Page<Post> searchedPosts = postService.searchPostsWithKeyword(page-1,keyword);
+        long numOfTotalPosts = searchedPosts.getTotalElements();
         List<Post> posts = searchedPosts.getContent();
         int lastPageNum = searchedPosts.getTotalPages();
         int current = page;
@@ -291,7 +292,7 @@ public class PostController {
                 .map(p -> new PostRetrieveDto(p))
                 .collect(Collectors.toList());
 
-        return new ResultForPaging(result,min,max,current);
+        return new ResultForSearch(result,min,max,current,numOfTotalPosts);
 
     }
 
@@ -314,29 +315,7 @@ public class PostController {
 
         return new ResultForList(result);
     }
-    @Data
-    @AllArgsConstructor
-    static class ResultForPaging<T>{
-        private T data;
-        private int min;
-        private int max;
-        private int current;
-    }
 
-
-    @Data
-    @AllArgsConstructor
-    static class ResultForList<T>
-    {
-        private T data;
-    }
-    @Data
-    @AllArgsConstructor
-    static class ResultForCommunity<T>{
-        private T hotTopics;
-        private T question;
-        private T management;
-    }
 }
 
 
