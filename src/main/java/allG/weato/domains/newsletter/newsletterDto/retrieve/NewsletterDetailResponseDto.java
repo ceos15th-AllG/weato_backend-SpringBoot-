@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class NewsletterDetailResponseDto {
 
+    private Long id;
     private String title;
     private TagType tagType;
 
@@ -29,6 +30,7 @@ public class NewsletterDetailResponseDto {
     private int bookmarkCount;
 
     public NewsletterDetailResponseDto(Newsletter newsletter){
+        id= newsletter.getId();
         title= newsletter.getTitle();
         tagType=newsletter.getTagType();
         views=newsletter.getViews();
