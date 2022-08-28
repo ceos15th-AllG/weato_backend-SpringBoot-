@@ -6,7 +6,7 @@ import allG.weato.domains.enums.TagType;
 import allG.weato.domains.member.dto.*;
 import allG.weato.domains.member.dto.create.CreateMemberRequest;
 import allG.weato.domains.member.dto.create.CreateMemberResponse;
-import allG.weato.domains.member.dto.retrieve.BookmarkResponseDto;
+import allG.weato.domains.member.dto.retrieve.MemberBookmarkNewslettersDto;
 import allG.weato.domains.member.dto.retrieve.MemberResponseDto;
 import allG.weato.domains.member.dto.retrieve.ProfileResponseDto;
 import allG.weato.domains.member.dto.update.UpdateProfileRequestDto;
@@ -18,6 +18,8 @@ import allG.weato.validation.CommonErrorCode;
 import allG.weato.validation.RestException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,7 +78,7 @@ public class MemberController {
     @Operation(summary = "Update member profile", description = "멤버 프로필 수정")
     @PatchMapping("/members/{memberId}/profile")
     public UpdateProfileResponseDto updateMemberProfile(@PathVariable("memberId") Long memberId, @RequestBody @Valid UpdateProfileRequestDto request){
-        Member member = memberService.findById(memberId);
+        Member member = memberService.findMemberForProfile(memberId);
         memberService.upadateProfile(member, request);
         return new UpdateProfileResponseDto(member);
     }
@@ -107,24 +109,33 @@ public class MemberController {
 
     @Operation(summary = "Retrieve post which is bookmarked", description = "북마크된 게시글 조회")
     @GetMapping("/members/{memberId}/bookmarks")
-    public BookmarkResponseDto showBookmarkByTagType(@RequestParam(value = "tag",defaultValue = "all") String code
-            ,@PathVariable("memberId") Long memberId){
+    public MemberBookmarkNewslettersDto showBookmarkByTagType(@PathVariable("memberId") Long memberId
+            , @RequestParam(value = "tag",defaultValue = "all") String code
+            , @RequestParam(value = "page",defaultValue = "1") int page){
         code=code.toUpperCase();
         TagType tagType = TagType.valueOf(code);
-        Member member = memberService.findMemberForProfile(memberId);
-        if(tagType==tagType.ALL) return new BookmarkResponseDto(member);
-        else return new BookmarkResponseDto(member,tagType);
+        Member member = memberService.findMemberForBookMark(memberId);
+        PageRequest pageRequest = PageRequest.of(page-1,10, Sort.by(Sort.Direction.DESC,"createAt"));
+        MemberBookmarkNewslettersDto memberBookmarkNewslettersDto;
+        if(tagType==tagType.ALL) memberBookmarkNewslettersDto = new MemberBookmarkNewslettersDto(member,pageRequest);
+        else memberBookmarkNewslettersDto = new MemberBookmarkNewslettersDto(member,pageRequest, tagType);
+        return memberBookmarkNewslettersDto;
     }
 
     @GetMapping("/members/{memberId}/scraped")
     public MemberScrapedPostDto showScrap(@PathVariable("memberId") Long memberId
-            ,@RequestParam(value = "type",defaultValue = "all")String code){
+            ,@RequestParam(value = "type",defaultValue = "all")String code
+            ,@RequestParam(value = "page",defaultValue = "1")int page ){
 
         code=code.toUpperCase();
         BoardType boardType = BoardType.valueOf(code);
-        Member member = memberService.findById(memberId);
-        if(boardType==BoardType.ALL) return new MemberScrapedPostDto(member);
-        else return new MemberScrapedPostDto(member,boardType);
-
+        Member member = memberService.findMemberForScrap(memberId);
+        PageRequest pageRequest = PageRequest.of(page-1,10, Sort.by(Sort.Direction.DESC,"createAt"));
+        MemberScrapedPostDto memberScrapedPostDto;
+        if(boardType==BoardType.ALL) memberScrapedPostDto = new MemberScrapedPostDto(member,pageRequest);
+        else memberScrapedPostDto = new MemberScrapedPostDto(member,pageRequest, boardType);
+        return memberScrapedPostDto;
     }
+
 }
+

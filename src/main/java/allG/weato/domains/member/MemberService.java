@@ -8,11 +8,15 @@ import allG.weato.domains.member.entities.BookMark;
 import allG.weato.domains.member.entities.Member;
 import allG.weato.domains.newsletter.entities.Newsletter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.management.MemoryManagerMXBean;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -29,9 +33,17 @@ public class MemberService {
       return memberRepository.findById(id).get();
     }
 
-    public Member findMemberForProfile(Long id){
-        return memberRepository.findMemberById(id);
+    public Member findMemberForScrap(Long id){
+        return memberRepository.findMemberByIdWithScrap(id);
     }
+
+    public Member findMemberForBookMark(Long id){
+        return memberRepository.findMemberByIdWithBookmark(id);
+    }
+    public Member findMemberForProfile(Long id){
+        return memberRepository.findMemberByIdForProfile(id);
+    }
+
     public Member findByEmail(String email){
       Optional<Member> member  = memberRepository.findByEmail(email);
       Member findMember = member.get();

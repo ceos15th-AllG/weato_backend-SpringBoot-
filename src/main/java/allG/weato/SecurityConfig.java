@@ -1,5 +1,6 @@
 package allG.weato;
 
+import allG.weato.domains.enums.Role;
 import allG.weato.domains.member.MemberRepository;
 import allG.weato.oauth2.Filter.JwtRequestFilter;
 import allG.weato.oauth2.JwtAuthenticationEntryPoint;
@@ -74,9 +75,11 @@ public class SecurityConfig {
                     .disable()
                 .formLogin()
                     .disable()
-                .authorizeRequests().antMatchers("/","/swagger-ui/index.html/**").permitAll()
-//                .anyRequest().authenticated()
-                .anyRequest().permitAll()
+                .authorizeRequests()
+                .antMatchers("/api/newsletters/**","/api/posts").permitAll()
+                .antMatchers("/","/swagger-ui/index.html/**").hasAnyAuthority(Role.ADMIN.getCode())
+                .anyRequest().authenticated()
+//                .anyRequest().permitAll()
                     .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
