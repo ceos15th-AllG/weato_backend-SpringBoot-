@@ -33,10 +33,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
       @EntityGraph(attributePaths = {"commentList"})
       Page<Post> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(String title,String content, Pageable pageable);
 
-      @EntityGraph(attributePaths = {"commentList"})
+      @EntityGraph(attributePaths = {"commentList","member"})
       Page<Post> findAll(Pageable pageable);
 
-      @EntityGraph(attributePaths = {"commentList"})
+      @EntityGraph(attributePaths = {"commentList","member"})
       Page<Post> findPostsByBoardType(Pageable pageable, BoardType boardType);
 
       @Modifying

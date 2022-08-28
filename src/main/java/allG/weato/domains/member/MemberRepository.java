@@ -24,7 +24,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> { //타입
     @Query("select m from Member m left join fetch m.scrapList where m.id = :id")
     Member findMemberByIdWithScrap(@Param("id") Long id);
 
-    @EntityGraph(attributePaths = {"profile,additionalInfo"})
+    @EntityGraph(attributePaths = {"profile","additionalInfo"})
     @Query("select m from Member m where m.id = :id")
     Member findMemberByIdForProfile(@Param("id") Long id);
 
